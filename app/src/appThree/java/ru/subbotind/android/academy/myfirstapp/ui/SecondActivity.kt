@@ -18,11 +18,7 @@ class SecondActivity : AppCompatActivity() {
 
         val name = intent.getStringExtra(NAME_KEY)
 
-        binding.welcomeTextView.text = resources.getString(R.string.welcome_text_template, name)
-        binding.closeButton.setOnClickListener { closeActivity() }
-    }
-
-    private fun closeActivity() {
-        finish()
+        binding.welcomeTextView.text =
+            resources.getString(R.string.welcome_to_app_three_text_template, name)
     }
 }

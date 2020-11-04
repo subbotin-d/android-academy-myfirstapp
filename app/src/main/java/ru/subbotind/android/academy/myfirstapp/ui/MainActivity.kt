@@ -3,6 +3,7 @@ package ru.subbotind.android.academy.myfirstapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToNextActivity() {
+        Log.d("MAIN", "navigation started")
         if (name.isNotEmpty()) {
             val intent = Intent(this, SecondActivity::class.java)
             intent.putExtra(SecondActivity.NAME_KEY, name)
