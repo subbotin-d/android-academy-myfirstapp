@@ -19,11 +19,52 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+
+        release {
+            minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "common", "app"
+    productFlavors {
+        commonFirst {
+            dimension "common"
+            applicationIdSuffix ".common.one"
+            versionNameSuffix "-common.one"
+        }
+
+        commonTwo {
+            dimension "common"
+            applicationIdSuffix ".common.two"
+            versionNameSuffix "-common.two"
+        }
+
+        appOne {
+            dimension "app"
+            applicationIdSuffix ".app.one"
+            versionNameSuffix "-app.one"
+        }
+
+        appTwo {
+            dimension "app"
+            applicationIdSuffix ".app.two"
+            versionNameSuffix "-app.two"
+        }
+
+        appThree {
+            dimension "app"
+            applicationIdSuffix ".app.three"
+            versionNameSuffix "-app.three"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
