@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">My First App</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="set_name">Set Name</string>
+    <string name="go_to_the_next_activity">Go to the next activity</string>
+    <string name="name_text_template">Your name is.... %s</string>
+    <string name="welcome_text_template">%s, welcome to second activity</string>
+    <string name="set_your_name_message">Set your name first!</string>
+    <string name="close_button">Close</string>
 </resources>
