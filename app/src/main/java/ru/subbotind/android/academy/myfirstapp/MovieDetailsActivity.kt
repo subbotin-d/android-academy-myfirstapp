@@ -1,15 +1,11 @@
 package ru.subbotind.android.academy.myfirstapp
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class MovieDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val intent = Intent(this, MovieDetailsActivity::class.java)
-        startActivity(intent)
+        setContentView(R.layout.activity_movie_details)
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_back_button">6dp</dimen>
+    <dimen name="spacing_top">44dp</dimen>
+    <dimen name="spacing_huge">16dp</dimen>
+    <dimen name="spacing_big">24dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_low">8dp</dimen>
+    <dimen name="spacing_tiny">4dp</dimen>
+    <dimen name="star_spacing">3.25dp</dimen>
+    <dimen name="review_spacing">8.89dp</dimen>
+    <dimen name="image_spacing">7dp</dimen>
+    <dimen name="personal_data_spacing">6dp</dimen>
+    <dimen name="cast_image_size">80dp</dimen>
+    <dimen name="spacing_very_huge_150">150dp</dimen>
+
+    <!-- text -->
+    <dimen name="text_spacing_line_extra">4sp</dimen>
+    <dimen name="text_spacing_regular">14sp</dimen>
+    <dimen name="text_spacing_pg">12sp</dimen>
+    <dimen name="text_spacing_huge">40sp</dimen>
+    <dimen name="line_height_huge">40sp</dimen>
+    <dimen name="line_height_regular">20sp</dimen>
+    <dimen name="line_height_tiny">20sp</dimen>
+</resources>
