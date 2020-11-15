@@ -175,11 +175,12 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_one_image"
-            android:layout_width="@dimen/cast_image_size"
-            android:layout_height="@dimen/cast_image_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/image_spacing"
-            android:layout_marginEnd="@dimen/spacing_low"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_two_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
             app:srcCompat="@drawable/robert_d_j" />
@@ -197,12 +198,13 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_two_image"
-            android:layout_width="@dimen/cast_image_size"
-            android:layout_height="@dimen/cast_image_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/image_spacing"
-            android:layout_marginEnd="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/actor_one_image"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_three_image"
+            app:layout_constraintStart_toEndOf="@+id/actor_one_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
             app:srcCompat="@drawable/evanc_c" />
 
@@ -219,12 +221,13 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_three_image"
-            android:layout_width="@dimen/cast_image_size"
-            android:layout_height="@dimen/cast_image_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/image_spacing"
-            android:layout_marginEnd="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/actor_two_image"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_four_image"
+            app:layout_constraintStart_toEndOf="@+id/actor_two_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
             app:srcCompat="@drawable/rufalo_m" />
 
@@ -241,12 +244,14 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_four_image"
-            android:layout_width="@dimen/cast_image_size"
-            android:layout_height="@dimen/cast_image_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/image_spacing"
-            android:layout_marginEnd="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/actor_three_image"
+            android:layout_marginEnd="@dimen/spacing_huge"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/actor_three_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
             app:srcCompat="@drawable/hemsworth_c" />
 
