@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/details_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/spacing_big"
+        tools:context=".MovieDetailsActivity">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/avengers_background" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/back_button"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_back_button"
+            android:layout_marginTop="@dimen/spacing_top"
+            android:drawableLeft="@drawable/ic_path"
+            android:text="@string/back_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/medium_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeWidth="0dp"
+            tools:ignore="RtlHardcoded" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pg_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_very_huge_150"
+            android:text="@string/pg_13"
+            android:textAppearance="@style/pgStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back_button" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/movie_title_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_huge"
+            android:text="@string/movie_title"
+            android:textAppearance="@style/Header3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pg_rating" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tag_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/tag_text"
+            android:textAppearance="@style/tagStyle"
+            app:layout_constraintEnd_toEndOf="@id/movie_title_text"
+            app:layout_constraintStart_toStartOf="@id/movie_title_text"
+            app:layout_constraintTop_toBottomOf="@id/movie_title_text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/first_star_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_low"
+            app:layout_constraintStart_toStartOf="@id/tag_text"
+            app:layout_constraintTop_toBottomOf="@id/tag_text"
+            app:srcCompat="@drawable/ic_active_star_icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/second_star_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/star_spacing"
+            android:layout_marginTop="@dimen/spacing_low"
+            app:layout_constraintStart_toEndOf="@id/first_star_image"
+            app:layout_constraintTop_toBottomOf="@id/tag_text"
+            app:srcCompat="@drawable/ic_active_star_icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/third_star_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/star_spacing"
+            android:layout_marginTop="@dimen/spacing_low"
+            app:layout_constraintStart_toEndOf="@id/second_star_image"
+            app:layout_constraintTop_toBottomOf="@id/tag_text"
+            app:srcCompat="@drawable/ic_active_star_icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fourth_star_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/star_spacing"
+            android:layout_marginTop="@dimen/spacing_low"
+            app:layout_constraintStart_toEndOf="@id/third_star_image"
+            app:layout_constraintTop_toBottomOf="@id/tag_text"
+            app:srcCompat="@drawable/ic_active_star_icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fifth_star_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/star_spacing"
+            android:layout_marginTop="@dimen/spacing_low"
+            app:layout_constraintStart_toEndOf="@id/fourth_star_image"
+            app:layout_constraintTop_toBottomOf="@id/tag_text"
+            app:srcCompat="@drawable/ic_inactive_star_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/total_reviews_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/review_spacing"
+            android:text="@string/total_reviews"
+            android:textAppearance="@style/reviewTextStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/fifth_star_image"
+            app:layout_constraintStart_toEndOf="@id/fifth_star_image"
+            app:layout_constraintTop_toTopOf="@+id/fifth_star_image" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/story_line_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_big"
+            android:text="@string/story_line_label"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/total_reviews_text" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/story_line_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:layout_marginEnd="@dimen/spacing_huge"
+            android:alpha="0.75"
+            android:lineSpacingExtra="@dimen/text_spacing_line_extra"
+            android:paddingTop="@dimen/spacing_tiny"
+            android:paddingBottom="@dimen/spacing_tiny"
+            android:text="@string/story_line_text"
+            android:textAppearance="@style/Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/story_line_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cast_line_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="24dp"
+            android:text="@string/cast_line_label"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/story_line_text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/actor_one_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/image_spacing"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_two_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
+            app:srcCompat="@drawable/robert_d_j" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actor_one_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/personal_data_spacing"
+            android:text="@string/rober_d_j"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintEnd_toEndOf="@id/actor_one_image"
+            app:layout_constraintStart_toStartOf="@id/actor_one_image"
+            app:layout_constraintTop_toBottomOf="@id/actor_one_image" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/actor_two_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/image_spacing"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_three_image"
+            app:layout_constraintStart_toEndOf="@+id/actor_one_image"
+            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
+            app:srcCompat="@drawable/evanc_c" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actor_two_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/personal_data_spacing"
+            android:text="@string/evans_c"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintEnd_toEndOf="@id/actor_two_image"
+            app:layout_constraintStart_toStartOf="@id/actor_two_image"
+            app:layout_constraintTop_toBottomOf="@id/actor_two_image" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/actor_three_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/image_spacing"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toStartOf="@+id/actor_four_image"
+            app:layout_constraintStart_toEndOf="@+id/actor_two_image"
+            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
+            app:srcCompat="@drawable/rufalo_m" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actor_three_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/personal_data_spacing"
+            android:text="@string/rufalo_m"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintEnd_toEndOf="@id/actor_three_image"
+            app:layout_constraintStart_toStartOf="@id/actor_three_image"
+            app:layout_constraintTop_toBottomOf="@id/actor_three_image" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/actor_four_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/image_spacing"
+            android:layout_marginEnd="@dimen/spacing_huge"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/actor_three_image"
+            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
+            app:srcCompat="@drawable/hemsworth_c" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actor_four_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/personal_data_spacing"
+            android:text="@string/hemsworth_c"
+            android:textAppearance="@style/Subtitle2"
+            app:layout_constraintEnd_toEndOf="@id/actor_four_image"
+            app:layout_constraintStart_toStartOf="@id/actor_four_image"
+            app:layout_constraintTop_toBottomOf="@id/actor_four_image" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="actor_four_text,actor_three_text,actor_two_text,actor_one_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
