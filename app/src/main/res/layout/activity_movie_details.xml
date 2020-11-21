@@ -23,6 +23,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/avengers_background" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/gradient_background"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_background_gradient" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/back_button"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -74,54 +85,22 @@
             app:layout_constraintStart_toStartOf="@id/movie_title_text"
             app:layout_constraintTop_toBottomOf="@id/movie_title_text" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/first_star_image"
+        <com.willy.ratingbar.BaseRatingBar
+            android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rating_bar_margin"
             android:layout_marginTop="@dimen/spacing_low"
-            app:layout_constraintStart_toStartOf="@id/tag_text"
+            android:gravity="start"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srcCompat="@drawable/ic_active_star_icon" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/second_star_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/star_spacing"
-            android:layout_marginTop="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/first_star_image"
-            app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srcCompat="@drawable/ic_active_star_icon" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/third_star_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/star_spacing"
-            android:layout_marginTop="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/second_star_image"
-            app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srcCompat="@drawable/ic_active_star_icon" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fourth_star_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/star_spacing"
-            android:layout_marginTop="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/third_star_image"
-            app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srcCompat="@drawable/ic_active_star_icon" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fifth_star_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/star_spacing"
-            android:layout_marginTop="@dimen/spacing_low"
-            app:layout_constraintStart_toEndOf="@id/fourth_star_image"
-            app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srcCompat="@drawable/ic_inactive_star_icon" />
+            app:srb_drawableEmpty="@drawable/ic_inactive_star_icon"
+            app:srb_drawableFilled="@drawable/ic_active_star_icon"
+            app:srb_isIndicator="true"
+            app:srb_numStars="5"
+            app:srb_rating="4"
+            app:srb_starPadding="@dimen/star_spacing"
+            app:srb_stepSize="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/total_reviews_text"
@@ -130,9 +109,9 @@
             android:layout_marginStart="@dimen/review_spacing"
             android:text="@string/total_reviews"
             android:textAppearance="@style/reviewTextStyle"
-            app:layout_constraintBottom_toBottomOf="@+id/fifth_star_image"
-            app:layout_constraintStart_toEndOf="@id/fifth_star_image"
-            app:layout_constraintTop_toTopOf="@+id/fifth_star_image" />
+            app:layout_constraintBottom_toBottomOf="@+id/rating_bar"
+            app:layout_constraintStart_toEndOf="@id/rating_bar"
+            app:layout_constraintTop_toTopOf="@+id/rating_bar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/story_line_label"
