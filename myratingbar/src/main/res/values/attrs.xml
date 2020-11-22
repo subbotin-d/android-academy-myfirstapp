@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyRatingBar">
+        <attr name="mrb_currentRating" format="integer" />
+        <attr name="mrb_maxStar" format="integer" />
+        <attr name="mrb_drawableEmpty" format="reference" />
+        <attr name="mrb_drawableActive" format="reference" />
+        <attr name="mrb_ratingBetweenPadding" format="dimension" />
+        <attr name="mrb_isIndicator" format="boolean" />
+    </declare-styleable>
+</resources>

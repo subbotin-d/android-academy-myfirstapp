@@ -85,22 +85,20 @@
             app:layout_constraintStart_toStartOf="@id/movie_title_text"
             app:layout_constraintTop_toBottomOf="@id/movie_title_text" />
 
-        <com.willy.ratingbar.BaseRatingBar
+        <ru.subbotind.android.academy.myratingbar.MyRatingBar
             android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/rating_bar_margin"
+            android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/spacing_low"
-            android:gravity="start"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:srb_drawableEmpty="@drawable/ic_inactive_star_icon"
-            app:srb_drawableFilled="@drawable/ic_active_star_icon"
-            app:srb_isIndicator="true"
-            app:srb_numStars="5"
-            app:srb_rating="4"
-            app:srb_starPadding="@dimen/star_spacing"
-            app:srb_stepSize="1" />
+            app:mrb_currentRating="4"
+            app:mrb_drawableActive="@drawable/ic_active_star_icon"
+            app:mrb_drawableEmpty="@drawable/ic_inactive_star_icon"
+            app:mrb_isIndicator="true"
+            app:mrb_maxStar="5"
+            app:mrb_ratingBetweenPadding="@dimen/star_spacing" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/total_reviews_text"
