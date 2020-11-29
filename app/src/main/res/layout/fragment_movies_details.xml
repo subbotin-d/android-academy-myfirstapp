@@ -9,8 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/spacing_big"
-        tools:context=".MovieDetailsActivity">
+        android:paddingBottom="@dimen/spacing_big">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/background"
@@ -21,7 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/avengers_background" />
+            tools:src="@drawable/avengers_background" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/gradient_background"
@@ -32,7 +31,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_background_gradient" />
+            app:srcCompat="@drawable/ic_background_gradient"
+            tools:viewBindingIgnore="true" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/back_button"
@@ -55,61 +55,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/spacing_very_huge_150"
-            android:text="@string/pg_13"
+            android:layout_marginTop="@dimen/spacing_very_huge_142"
             android:textAppearance="@style/pgStyle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back_button" />
+            app:layout_constraintTop_toBottomOf="@id/back_button"
+            tools:text="13+" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/movie_title_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_low"
             android:layout_marginEnd="@dimen/spacing_huge"
-            android:text="@string/movie_title"
             android:textAppearance="@style/Header3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pg_rating" />
+            app:layout_constraintTop_toBottomOf="@id/pg_rating"
+            tools:text="@string/movie_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tag_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/tag_text"
             android:textAppearance="@style/tagStyle"
             app:layout_constraintEnd_toEndOf="@id/movie_title_text"
             app:layout_constraintStart_toStartOf="@id/movie_title_text"
-            app:layout_constraintTop_toBottomOf="@id/movie_title_text" />
+            app:layout_constraintTop_toBottomOf="@id/movie_title_text"
+            tools:text="@string/tag_text" />
 
         <ru.subbotind.android.academy.myratingbar.MyRatingBar
             android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/spacing_low"
+            android:layout_marginTop="@dimen/spacing_tiny"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_text"
-            app:mrb_currentRating="4"
             app:mrb_drawableActive="@drawable/ic_active_star_icon"
             app:mrb_drawableEmpty="@drawable/ic_inactive_star_icon"
             app:mrb_isIndicator="true"
-            app:mrb_maxStar="5"
-            app:mrb_ratingBetweenPadding="@dimen/star_spacing" />
+            app:mrb_ratingBetweenPadding="@dimen/big_star_spacing"
+            tools:mrb_currentRating="4" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/total_reviews_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/review_spacing"
-            android:text="@string/total_reviews"
             android:textAppearance="@style/reviewTextStyle"
             app:layout_constraintBottom_toBottomOf="@+id/rating_bar"
             app:layout_constraintStart_toEndOf="@id/rating_bar"
-            app:layout_constraintTop_toTopOf="@+id/rating_bar" />
+            app:layout_constraintTop_toTopOf="@+id/rating_bar"
+            tools:text="@string/total_reviews" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/story_line_label"
@@ -120,7 +119,8 @@
             android:text="@string/story_line_label"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/total_reviews_text" />
+            app:layout_constraintTop_toBottomOf="@id/total_reviews_text"
+            tools:viewBindingIgnore="true" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/story_line_text"
@@ -133,22 +133,24 @@
             android:lineSpacingExtra="@dimen/text_spacing_line_extra"
             android:paddingTop="@dimen/spacing_tiny"
             android:paddingBottom="@dimen/spacing_tiny"
-            android:text="@string/story_line_text"
             android:textAppearance="@style/Body2"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/story_line_label" />
+            app:layout_constraintTop_toBottomOf="@id/story_line_label"
+            tools:text="@string/story_line_text" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cast_line_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/spacing_big"
             android:text="@string/cast_line_label"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/story_line_text" />
+            app:layout_constraintTop_toBottomOf="@id/story_line_text"
+            tools:viewBindingIgnore="true" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_one_image"
@@ -160,18 +162,18 @@
             app:layout_constraintEnd_toStartOf="@+id/actor_two_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            app:srcCompat="@drawable/robert_d_j" />
+            tools:srcCompat="@drawable/robert_d_j" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/actor_one_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/personal_data_spacing"
-            android:text="@string/rober_d_j"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintEnd_toEndOf="@id/actor_one_image"
             app:layout_constraintStart_toStartOf="@id/actor_one_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_one_image" />
+            app:layout_constraintTop_toBottomOf="@id/actor_one_image"
+            tools:text="@string/rober_d_j" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_two_image"
@@ -183,18 +185,18 @@
             app:layout_constraintEnd_toStartOf="@+id/actor_three_image"
             app:layout_constraintStart_toEndOf="@+id/actor_one_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            app:srcCompat="@drawable/evanc_c" />
+            tools:srcCompat="@drawable/evanc_c" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/actor_two_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/personal_data_spacing"
-            android:text="@string/evans_c"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintEnd_toEndOf="@id/actor_two_image"
             app:layout_constraintStart_toStartOf="@id/actor_two_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_two_image" />
+            app:layout_constraintTop_toBottomOf="@id/actor_two_image"
+            tools:text="@string/evans_c" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_three_image"
@@ -206,18 +208,18 @@
             app:layout_constraintEnd_toStartOf="@+id/actor_four_image"
             app:layout_constraintStart_toEndOf="@+id/actor_two_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            app:srcCompat="@drawable/rufalo_m" />
+            tools:srcCompat="@drawable/rufalo_m" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/actor_three_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/personal_data_spacing"
-            android:text="@string/rufalo_m"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintEnd_toEndOf="@id/actor_three_image"
             app:layout_constraintStart_toStartOf="@id/actor_three_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_three_image" />
+            app:layout_constraintTop_toBottomOf="@id/actor_three_image"
+            tools:text="@string/rufalo_m" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/actor_four_image"
@@ -230,25 +232,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/actor_three_image"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            app:srcCompat="@drawable/hemsworth_c" />
+            tools:srcCompat="@drawable/hemsworth_c" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/actor_four_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/personal_data_spacing"
-            android:text="@string/hemsworth_c"
             android:textAppearance="@style/Subtitle2"
             app:layout_constraintEnd_toEndOf="@id/actor_four_image"
             app:layout_constraintStart_toStartOf="@id/actor_four_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_four_image" />
+            app:layout_constraintTop_toBottomOf="@id/actor_four_image"
+            tools:text="@string/hemsworth_c" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="actor_four_text,actor_three_text,actor_two_text,actor_one_text" />
+            app:constraint_referenced_ids="actor_four_text,actor_three_text,actor_two_text,actor_one_text"
+            tools:viewBindingIgnore="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

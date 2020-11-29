@@ -7,19 +7,25 @@
     <dimen name="spacing_medium">12dp</dimen>
     <dimen name="spacing_low">8dp</dimen>
     <dimen name="spacing_tiny">4dp</dimen>
-    <dimen name="star_spacing">3.25dp</dimen>
-    <dimen name="review_spacing">8.89dp</dimen>
+    <dimen name="big_star_spacing">3dp</dimen>
+    <dimen name="small_star_spacing">2dp</dimen>
+    <dimen name="review_spacing">8dp</dimen>
     <dimen name="image_spacing">7dp</dimen>
     <dimen name="personal_data_spacing">6dp</dimen>
     <dimen name="cast_image_size">80dp</dimen>
-    <dimen name="spacing_very_huge_150">150dp</dimen>
+    <dimen name="spacing_very_huge_142">142dp</dimen>
+    <dimen name="rating_bar_margin">13dp</dimen>
+    <dimen name="card_view_max_width">170dp</dimen>
 
     <!-- text -->
     <dimen name="text_spacing_line_extra">4sp</dimen>
+    <dimen name="text_spacing_tiny">8sp</dimen>
     <dimen name="text_spacing_regular">14sp</dimen>
     <dimen name="text_spacing_pg">12sp</dimen>
     <dimen name="text_spacing_huge">40sp</dimen>
     <dimen name="line_height_huge">40sp</dimen>
     <dimen name="line_height_regular">20sp</dimen>
-    <dimen name="line_height_tiny">20sp</dimen>
+    <dimen name="line_height_small">14sp</dimen>
+    <dimen name="line_height_tiny">12sp</dimen>
+    <dimen name="card_corner_radius">6dp</dimen>
 </resources>

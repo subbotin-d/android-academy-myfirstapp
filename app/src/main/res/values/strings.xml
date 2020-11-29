@@ -8,11 +8,13 @@
         universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
     <string name="movie_title">Avengers:\nEnd Game</string>
     <string name="tag_text">Action, Adventure, Fantasy</string>
-    <string name="total_reviews">125 Reviews</string>
+    <string name="total_reviews">%s Reviews</string>
+    <string name="movie_duration">%s MIN</string>
 
     <!-- Cast -->
     <string name="rober_d_j">Robert Downey Jr.</string>
     <string name="evans_c">Chris Evans</string>
     <string name="rufalo_m">Mark Ruffalo</string>
     <string name="hemsworth_c">Chris Hemsworth</string>
+    <string name="movies_list_header">Movies list</string>
 </resources>
