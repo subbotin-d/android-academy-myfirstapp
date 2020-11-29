@@ -1,4 +1,4 @@
-package ru.subbotind.android.academy.myfirstapp.ui.adapter
+package ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.MovieItemBinding
+import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 
-class MovieAdapter(private val movieListener: MovieItemListener) :
-    ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieCallBack()) {
+class MovieAdapter(
+    private val likeListener: () -> Unit,
+    private val cardListener: (Long) -> Unit
+) : ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieCallBack()) {
 
     companion object {
         const val MOVIE_HEADER_ITEM_ID = 0
@@ -27,7 +30,11 @@ class MovieAdapter(private val movieListener: MovieItemListener) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is MovieViewHolder -> holder.bind((item as DataItem.MovieItem).movie, movieListener)
+            is MovieViewHolder -> holder.bind(
+                (item as DataItem.MovieItem).movie,
+                likeListener,
+                cardListener
+            )
         }
     }
 
@@ -38,7 +45,7 @@ class MovieAdapter(private val movieListener: MovieItemListener) :
         }
     }
 
-    class MovieViewHolder private constructor(val binding: MovieItemBinding) :
+    class MovieViewHolder private constructor(private val binding: MovieItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         companion object {
@@ -50,10 +57,42 @@ class MovieAdapter(private val movieListener: MovieItemListener) :
             }
         }
 
-        fun bind(movie: Movie, movieListener: MovieItemListener) {
-            binding.movie = movie
-            binding.movieListener = movieListener
-            binding.executePendingBindings()
+        fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Long) -> Unit) {
+            binding.apply {
+                moviePromoCard.setOnDebouncedClickListener {
+                    cardListener(movie.id)
+                }
+
+                movieMainImage.setImageResource(movie.promoImage)
+
+                if (movie.isLiked) {
+                    likeImage.setImageResource(R.drawable.ic_active_like)
+                } else {
+                    likeImage.setImageResource(R.drawable.ic_inactive_like)
+                }
+
+                likeImage.setOnDebouncedClickListener {
+                    likeListener()
+                }
+
+                pgRatingText.text = movie.pgRating
+
+                movieRatingBar.setCurrentRating(movie.userRating)
+
+                movieTotalReviewText.text = itemView.context.getString(
+                    R.string.total_reviews,
+                    movie.reviewsCount.toString()
+                )
+
+                movieTagsText.text = movie.tags
+
+                movieTitle.text = movie.title
+
+                movieDurationText.text = itemView.resources.getString(
+                    R.string.movie_duration,
+                    movie.duration.toString()
+                )
+            }
         }
     }
 

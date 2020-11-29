@@ -1,4 +1,4 @@
-package ru.subbotind.android.academy.myfirstapp.ui.adapter
+package ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 
