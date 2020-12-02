@@ -13,7 +13,7 @@ import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClick
 class MovieAdapter(
     private val likeListener: () -> Unit,
     private val cardListener: (Long) -> Unit
-) : ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieCallBack()) {
+) : ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieDiffUtilCallback()) {
 
     companion object {
         const val MOVIE_HEADER_ITEM_ID = 0
@@ -45,75 +45,14 @@ class MovieAdapter(
         }
     }
 
-    class MovieViewHolder private constructor(private val binding: MovieItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        companion object {
-            fun from(parent: ViewGroup): MovieViewHolder {
-                val inflater = LayoutInflater.from(parent.context)
-                val binding =
-                    MovieItemBinding.inflate(inflater, parent, false)
-                return MovieViewHolder(binding)
-            }
-        }
-
-        fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Long) -> Unit) {
-            binding.apply {
-                moviePromoCard.setOnDebouncedClickListener {
-                    cardListener(movie.id)
-                }
-
-                movieMainImage.setImageResource(movie.promoImage)
-
-                if (movie.isLiked) {
-                    likeImage.setImageResource(R.drawable.ic_active_like)
-                } else {
-                    likeImage.setImageResource(R.drawable.ic_inactive_like)
-                }
-
-                likeImage.setOnDebouncedClickListener {
-                    likeListener()
-                }
-
-                pgRatingText.text = movie.pgRating
-
-                movieRatingBar.setCurrentRating(movie.userRating)
-
-                movieTotalReviewText.text = itemView.context.getString(
-                    R.string.total_reviews,
-                    movie.reviewsCount.toString()
-                )
-
-                movieTagsText.text = movie.tags
-
-                movieTitle.text = movie.title
-
-                movieDurationText.text = itemView.resources.getString(
-                    R.string.movie_duration,
-                    movie.duration.toString()
-                )
-            }
-        }
-    }
-
-    class MovieHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        companion object {
-            fun from(parent: ViewGroup): MovieHeaderViewHolder {
-                val inflater = LayoutInflater.from(parent.context)
-                val view = inflater.inflate(R.layout.movie_list_header_item, parent, false)
-                return MovieHeaderViewHolder(view)
-            }
-        }
-    }
-
     fun submitData(movieList: List<Movie>?) {
         val resultList = when (movieList) {
             null -> listOf(DataItem.MovieHeaderItem)
             else -> listOf(DataItem.MovieHeaderItem) + movieList.map { DataItem.MovieItem(it) }
         }
+
         submitList(resultList)
     }
-
 }
 
 sealed class DataItem {
@@ -129,4 +68,65 @@ sealed class DataItem {
     }
 
     abstract val id: Long
+}
+
+class MovieViewHolder private constructor(private val binding: MovieItemBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    companion object {
+        fun from(parent: ViewGroup): MovieViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding =
+                MovieItemBinding.inflate(inflater, parent, false)
+            return MovieViewHolder(binding)
+        }
+    }
+
+    fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Long) -> Unit) {
+        binding.apply {
+            moviePromoCard.setOnDebouncedClickListener {
+                cardListener(movie.id)
+            }
+
+            movieMainImage.setImageResource(movie.promoImage)
+
+            if (movie.isLiked) {
+                likeImage.setImageResource(R.drawable.ic_active_like)
+            } else {
+                likeImage.setImageResource(R.drawable.ic_inactive_like)
+            }
+
+            likeImage.setOnDebouncedClickListener {
+                likeListener()
+            }
+
+            pgRatingText.text = movie.pgRating
+
+            movieRatingBar.setCurrentRating(movie.userRating)
+
+            movieTotalReviewText.text = itemView.context.getString(
+                R.string.total_reviews,
+                movie.reviewsCount.toString()
+            )
+
+            movieTagsText.text = movie.tags
+
+            movieTitle.text = movie.title
+
+            movieDurationText.text = itemView.resources.getString(
+                R.string.movie_duration,
+                movie.duration.toString()
+            )
+        }
+    }
+}
+
+class MovieHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    companion object {
+        fun from(parent: ViewGroup): MovieHeaderViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val view = inflater.inflate(R.layout.movie_list_header_item, parent, false)
+            return MovieHeaderViewHolder(view)
+        }
+    }
 }
