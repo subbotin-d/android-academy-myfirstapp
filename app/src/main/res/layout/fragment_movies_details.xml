@@ -16,6 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:maxHeight="@dimen/movie_background_max_height"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,10 +28,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:maxHeight="@dimen/movie_background_max_height"
             android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/background"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toTopOf="@id/background"
             app:srcCompat="@drawable/ic_background_gradient"
             tools:viewBindingIgnore="true" />
 
@@ -152,106 +155,18 @@
             app:layout_constraintTop_toBottomOf="@id/story_line_text"
             tools:viewBindingIgnore="true" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/actor_one_image"
-            android:layout_width="0dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/actor_list"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/image_spacing"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toStartOf="@+id/actor_two_image"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/spacing_low"
+            android:paddingEnd="@dimen/spacing_low"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            tools:srcCompat="@drawable/robert_d_j" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/actor_one_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/personal_data_spacing"
-            android:textAppearance="@style/Subtitle2"
-            app:layout_constraintEnd_toEndOf="@id/actor_one_image"
-            app:layout_constraintStart_toStartOf="@id/actor_one_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_one_image"
-            tools:text="@string/rober_d_j" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/actor_two_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/image_spacing"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toStartOf="@+id/actor_three_image"
-            app:layout_constraintStart_toEndOf="@+id/actor_one_image"
-            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            tools:srcCompat="@drawable/evanc_c" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/actor_two_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/personal_data_spacing"
-            android:textAppearance="@style/Subtitle2"
-            app:layout_constraintEnd_toEndOf="@id/actor_two_image"
-            app:layout_constraintStart_toStartOf="@id/actor_two_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_two_image"
-            tools:text="@string/evans_c" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/actor_three_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/image_spacing"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toStartOf="@+id/actor_four_image"
-            app:layout_constraintStart_toEndOf="@+id/actor_two_image"
-            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            tools:srcCompat="@drawable/rufalo_m" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/actor_three_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/personal_data_spacing"
-            android:textAppearance="@style/Subtitle2"
-            app:layout_constraintEnd_toEndOf="@id/actor_three_image"
-            app:layout_constraintStart_toStartOf="@id/actor_three_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_three_image"
-            tools:text="@string/rufalo_m" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/actor_four_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_huge"
-            android:layout_marginTop="@dimen/image_spacing"
-            android:layout_marginEnd="@dimen/spacing_huge"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/actor_three_image"
-            app:layout_constraintTop_toBottomOf="@id/cast_line_label"
-            tools:srcCompat="@drawable/hemsworth_c" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/actor_four_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/personal_data_spacing"
-            android:textAppearance="@style/Subtitle2"
-            app:layout_constraintEnd_toEndOf="@id/actor_four_image"
-            app:layout_constraintStart_toStartOf="@id/actor_four_image"
-            app:layout_constraintTop_toBottomOf="@id/actor_four_image"
-            tools:text="@string/hemsworth_c" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="actor_four_text,actor_three_text,actor_two_text,actor_one_text"
-            tools:viewBindingIgnore="true" />
+            tools:listitem="@layout/actor_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

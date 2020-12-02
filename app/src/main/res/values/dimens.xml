@@ -28,4 +28,5 @@
     <dimen name="line_height_small">14sp</dimen>
     <dimen name="line_height_tiny">12sp</dimen>
     <dimen name="card_corner_radius">6dp</dimen>
+    <dimen name="movie_background_max_height">300dp</dimen>
 </resources>
