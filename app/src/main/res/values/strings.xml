@@ -17,4 +17,5 @@
     <string name="rufalo_m">Mark Ruffalo</string>
     <string name="hemsworth_c">Chris Hemsworth</string>
     <string name="movies_list_header">Movies list</string>
+    <string name="no_movies_available_text">There are no movies available</string>
 </resources>
