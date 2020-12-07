@@ -9,12 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.data.DataContainer
+import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesListBinding
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
 
 
 class MovieListFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = MovieListFragment()
+
+        const val TAG = "moviesListFragment"
+    }
 
     private var _binding: FragmentMoviesListBinding? = null
     private val binding
@@ -34,8 +41,6 @@ class MovieListFragment : Fragment() {
             cardListener = onMoviePromoCardClick()
         )
 
-        movieAdapter.submitData(movieList)
-
         val spanCount =
             calculateSpanCount(resources.getDimensionPixelSize(R.dimen.card_view_max_width))
 
@@ -53,7 +58,25 @@ class MovieListFragment : Fragment() {
             adapter = movieAdapter
         }
 
+        movieAdapter.submitData(movieList)
+
+        toggleEmptyMoviesStub(movieList)
+
         return binding.root
+    }
+
+    private fun toggleEmptyMoviesStub(moviesListSize: List<Movie>) {
+        binding.apply {
+            if (moviesListSize.isEmpty()) {
+                noMoviesImage.visibility = View.VISIBLE
+                noMoviesText.visibility = View.VISIBLE
+                movieListRecyclerView.visibility = View.GONE
+            } else {
+                noMoviesImage.visibility = View.GONE
+                noMoviesText.visibility = View.GONE
+                movieListRecyclerView.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun onLikeIconClick(): () -> Unit = {
@@ -75,12 +98,6 @@ class MovieListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() = MovieListFragment()
-
-        const val TAG = "moviesListFragment"
     }
 }
 

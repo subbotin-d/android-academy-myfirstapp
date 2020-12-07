@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.data.DataContainer
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesDetailsBinding
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
+import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.adapter.ActorAdapter
 
 private const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
 
@@ -46,17 +48,18 @@ class MovieDetailsFragment : Fragment() {
                     getString(R.string.total_reviews, movie.reviewsCount.toString())
                 storyLineText.text = movie.storyLine
 
-                actorOneImage.setImageResource(movie.cast[0].avatar)
-                actorOneText.text = movie.cast[0].fullName
+                val actorAdapter = ActorAdapter()
+                actorList.apply {
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = actorAdapter
+                }
 
-                actorTwoImage.setImageResource(movie.cast[1].avatar)
-                actorTwoText.text = movie.cast[1].fullName
-
-                actorThreeImage.setImageResource(movie.cast[2].avatar)
-                actorThreeText.text = movie.cast[2].fullName
-
-                actorFourImage.setImageResource(movie.cast[3].avatar)
-                actorFourText.text = movie.cast[3].fullName
+                if (movie.cast.isNotEmpty()) {
+                    actorAdapter.submitList(movie.cast)
+                } else {
+                    hideCastSection()
+                }
             }
         }
 
@@ -65,6 +68,13 @@ class MovieDetailsFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun hideCastSection() {
+        binding.apply {
+            castLineLabel.visibility = View.GONE
+            actorList.visibility = View.GONE
+        }
     }
 
     companion object {

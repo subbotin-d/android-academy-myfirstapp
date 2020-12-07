@@ -18,8 +18,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_gradient_movie_item_background">
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_gradient_movie_item_background"
+        android:paddingBottom="@dimen/spacing_low">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/movie_main_image"
@@ -137,8 +138,6 @@
             style="@style/durationStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_low"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/movie_title"
             app:layout_constraintStart_toStartOf="@id/movie_title"
             app:layout_constraintTop_toBottomOf="@id/movie_title"
