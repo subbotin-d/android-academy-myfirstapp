@@ -1,5 +1,6 @@
 package ru.subbotind.android.academy.myfirstapp.ui.animationtask
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentCommonBinding
+import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task1.FirstActivity
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task2.add.FirstWithAddFragment
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task2.replace.FirstWithReplaceFragment
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task3.BottomNavigationFragment
+import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 
 class CommonFragment : Fragment() {
 
@@ -23,40 +26,41 @@ class CommonFragment : Fragment() {
     ): View {
         val binding = FragmentCommonBinding.inflate(inflater)
 
-        binding.task1Button.setOnClickListener {
-            //Todo activity animation
+        binding.task1Button.setOnDebouncedClickListener {
+            val intent = Intent(this.context, FirstActivity::class.java)
+            startActivity(intent)
         }
 
-        binding.task2AddButton.setOnClickListener {
+        binding.task2AddButton.setOnDebouncedClickListener {
             fragmentManager?.beginTransaction()
                 ?.replace(
                     R.id.fragmentContainer,
                     FirstWithAddFragment.newInstance(),
-                    FirstWithAddFragment.TAG
+                    FirstWithAddFragment::class.java.simpleName
                 )
-                ?.addToBackStack(FirstWithAddFragment.TAG)
+                ?.addToBackStack(FirstWithAddFragment::class.java.simpleName)
                 ?.commit()
         }
 
-        binding.task2ReplaceButton.setOnClickListener {
+        binding.task2ReplaceButton.setOnDebouncedClickListener {
             fragmentManager?.beginTransaction()
                 ?.replace(
                     R.id.fragmentContainer,
                     FirstWithReplaceFragment.newInstance(),
-                    FirstWithReplaceFragment.TAG
+                    FirstWithReplaceFragment::class.java.simpleName
                 )
-                ?.addToBackStack(FirstWithReplaceFragment.TAG)
+                ?.addToBackStack(FirstWithReplaceFragment::class.java.simpleName)
                 ?.commit()
         }
 
-        binding.task3Button.setOnClickListener {
+        binding.task3Button.setOnDebouncedClickListener {
             fragmentManager?.beginTransaction()
                 ?.replace(
                     R.id.fragmentContainer,
                     BottomNavigationFragment.newInstance(),
-                    BottomNavigationFragment.TAG
+                    BottomNavigationFragment::class.java.simpleName
                 )
-                ?.addToBackStack(BottomNavigationFragment.TAG)
+                ?.addToBackStack(BottomNavigationFragment::class.java.simpleName)
                 ?.commit()
         }
 
