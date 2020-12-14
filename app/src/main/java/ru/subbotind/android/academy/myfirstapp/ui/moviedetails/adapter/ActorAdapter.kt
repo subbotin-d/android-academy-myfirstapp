@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.data.Actor
 import ru.subbotind.android.academy.myfirstapp.databinding.ActorItemBinding
@@ -31,11 +32,13 @@ class ActorViewHolder private constructor(private val binding: ActorItemBinding)
 
     fun bind(actor: Actor) {
         binding.apply {
-            actor.avatar?.let { avatarImage ->
-                actorImage.setImageResource(avatarImage)
-            } ?: actorImage.setImageResource(R.drawable.ic_unknown_actor_avatar)
+            Glide.with(itemView.context)
+                .load(actor.picture)
+                .placeholder(R.drawable.ic_image_download_placeholder)
+                .error(R.drawable.ic_unknown_actor_avatar)
+                .into(actorImage)
 
-            actorText.text = actor.fullName
+            actorText.text = actor.name
         }
     }
 }

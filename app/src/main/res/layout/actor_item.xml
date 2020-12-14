@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/actor_container"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginStart="@dimen/spacing_low"
     android:layout_marginEnd="@dimen/spacing_low">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/actor_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/cast_image_size"
+        android:layout_height="@dimen/cast_image_size"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/hemsworth_c" />
+        tools:srcCompat="@drawable/ic_image_download_placeholder" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actor_text"

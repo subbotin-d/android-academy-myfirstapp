@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.MovieItemBinding
@@ -12,7 +13,7 @@ import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClick
 
 class MovieAdapter(
     private val likeListener: () -> Unit,
-    private val cardListener: (Long) -> Unit
+    private val cardListener: (Int) -> Unit
 ) : ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieDiffUtilCallback()) {
 
     companion object {
@@ -57,21 +58,21 @@ class MovieAdapter(
 
 sealed class DataItem {
     data class MovieItem(val movie: Movie) : DataItem() {
-        override val id: Long
+        override val id: Int
             get() = movie.id
-
     }
 
     object MovieHeaderItem : DataItem() {
-        override val id: Long
-            get() = Long.MIN_VALUE
+        override val id: Int
+            get() = Int.MIN_VALUE
     }
 
-    abstract val id: Long
+    abstract val id: Int
 }
 
-class MovieViewHolder private constructor(private val binding: MovieItemBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+class MovieViewHolder private constructor(
+    private val binding: MovieItemBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun from(parent: ViewGroup): MovieViewHolder {
@@ -82,40 +83,45 @@ class MovieViewHolder private constructor(private val binding: MovieItemBinding)
         }
     }
 
-    fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Long) -> Unit) {
+    fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Int) -> Unit) {
         binding.apply {
             moviePromoCard.setOnDebouncedClickListener {
                 cardListener(movie.id)
             }
 
-            movieMainImage.setImageResource(movie.promoImage)
+            Glide
+                .with(itemView.context)
+                .load(movie.poster)
+                .centerCrop()
+                .placeholder(R.drawable.ic_image_download_placeholder)
+                .error(R.drawable.ic_image_download_placeholder)
+                .into(movieMainImage)
 
-            if (movie.isLiked) {
-                likeImage.setImageResource(R.drawable.ic_active_like)
-            } else {
-                likeImage.setImageResource(R.drawable.ic_inactive_like)
-            }
+            likeImage.setImageResource(R.drawable.ic_inactive_like)
 
             likeImage.setOnDebouncedClickListener {
                 likeListener()
             }
 
-            pgRatingText.text = movie.pgRating
+            pgRatingText.text = itemView.context.getString(
+                R.string.pg_rating,
+                movie.minimumAge.toString()
+            )
 
-            movieRatingBar.setCurrentRating(movie.userRating)
+            movieRatingBar.setCurrentRating(movie.ratings / 2)
 
             movieTotalReviewText.text = itemView.context.getString(
                 R.string.total_reviews,
-                movie.reviewsCount.toString()
+                movie.numberOfRatings.toString()
             )
 
-            movieTagsText.text = movie.tags
+            movieTagsText.text = movie.genres.joinToString { it.name }
 
             movieTitle.text = movie.title
 
             movieDurationText.text = itemView.resources.getString(
                 R.string.movie_duration,
-                movie.duration.toString()
+                movie.runtime.toString()
             )
         }
     }

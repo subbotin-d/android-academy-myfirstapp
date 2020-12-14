@@ -10,6 +10,7 @@
     <string name="tag_text">Action, Adventure, Fantasy</string>
     <string name="total_reviews">%s Reviews</string>
     <string name="movie_duration">%s MIN</string>
+    <string name="pg_rating">%s+</string>
 
     <!-- Cast -->
     <string name="rober_d_j">Robert Downey Jr.</string>

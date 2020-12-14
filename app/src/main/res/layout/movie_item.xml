@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movie_promo_card"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_medium"
-    android:layout_marginEnd="@dimen/spacing_medium"
+    android:layout_marginStart="@dimen/promo_image_spacing"
+    android:layout_marginEnd="@dimen/promo_image_spacing"
     android:layout_marginBottom="18dp"
     android:clickable="true"
     android:focusable="true"
@@ -17,20 +17,20 @@
     tools:layout_marginTop="30dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/ic_gradient_movie_item_background"
         android:paddingBottom="@dimen/spacing_low">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/movie_main_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/promo_image_height"
+            android:adjustViewBounds="true"
+            android:maxWidth="@dimen/card_view_max_width"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/avengers_promo_image" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/gradient_background"
@@ -109,11 +109,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/movie_tags_text"
             style="@style/tagStyle.Small"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toTopOf="@id/movie_rating_bar"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_goneMarginStart="2dp"
             tools:text="Action, Adventure, Drama" />

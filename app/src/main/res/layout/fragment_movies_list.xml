@@ -33,7 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:paddingStart="@dimen/promo_image_spacing"
         android:paddingTop="@dimen/spacing_top"
+        android:paddingEnd="@dimen/promo_image_spacing"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/movie_item" />
