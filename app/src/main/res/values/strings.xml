@@ -31,4 +31,5 @@
     <string name="fragment_animation_bnc">Fragment animation(BNC)</string>
     <string name="first_fragment">1 Fragment</string>
     <string name="second_fragment">2 Fragment</string>
+    <string name="animation_nav_arch">Animation Nav Arch</string>
 </resources>

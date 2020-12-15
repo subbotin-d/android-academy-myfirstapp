@@ -12,6 +12,7 @@ import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task1.FirstActiv
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task2.add.FirstWithAddFragment
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task2.replace.FirstWithReplaceFragment
 import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task3.BottomNavigationFragment
+import ru.subbotind.android.academy.myfirstapp.ui.animationtask.task4.NavArchActivity
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 
 class CommonFragment : Fragment() {
@@ -62,6 +63,11 @@ class CommonFragment : Fragment() {
                 )
                 ?.addToBackStack(BottomNavigationFragment::class.java.simpleName)
                 ?.commit()
+        }
+
+        binding.task4Button.setOnDebouncedClickListener {
+            val intent = Intent(this.context, NavArchActivity::class.java)
+            startActivity(intent)
         }
 
         return binding.root
