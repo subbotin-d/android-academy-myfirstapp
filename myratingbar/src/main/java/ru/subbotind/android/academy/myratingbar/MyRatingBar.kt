@@ -5,8 +5,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.res.ResourcesCompat
+import kotlin.math.floor
 
 class MyRatingBar @JvmOverloads constructor(
     context: Context,
@@ -16,21 +17,21 @@ class MyRatingBar @JvmOverloads constructor(
 
     private companion object {
         const val DEFAULT_MAX_STAR: Int = 5
-        const val DEFAULT_CURRENT_RATING: Int = 0
+        const val DEFAULT_CURRENT_RATING: Float = 0f
         const val DEFAULT_PADDING: Int = 0
     }
 
-    private val starList: MutableList<AppCompatImageView> = mutableListOf()
+    private val starList: MutableList<RatingItemView> = mutableListOf()
     private var maxStar: Int = 0
-    private var currentRating: Int = 0
+    private var currentRating: Float = 0f
     private var padding: Int = 0
     private var isIndicator: Boolean = false
 
     @DrawableRes
-    private var activeDrawable: Int
+    private var activeDrawableRes: Int
 
     @DrawableRes
-    private var inactiveDrawable: Int
+    private var inactiveDrawableRes: Int
 
     init {
         val typedArray =
@@ -38,8 +39,10 @@ class MyRatingBar @JvmOverloads constructor(
         try {
             maxStar = typedArray.getInt(R.styleable.MyRatingBar_mrb_maxStar, DEFAULT_MAX_STAR)
 
-            currentRating =
-                typedArray.getInt(R.styleable.MyRatingBar_mrb_currentRating, DEFAULT_CURRENT_RATING)
+            currentRating = typedArray.getFloat(
+                R.styleable.MyRatingBar_mrb_currentRating,
+                DEFAULT_CURRENT_RATING
+            )
 
             padding = typedArray.getDimensionPixelSize(
                 R.styleable.MyRatingBar_mrb_ratingBetweenPadding,
@@ -48,12 +51,12 @@ class MyRatingBar @JvmOverloads constructor(
 
             isIndicator = typedArray.getBoolean(R.styleable.MyRatingBar_mrb_isIndicator, false)
 
-            activeDrawable = typedArray.getResourceId(
+            activeDrawableRes = typedArray.getResourceId(
                 R.styleable.MyRatingBar_mrb_drawableActive,
                 android.R.drawable.star_big_on
             )
 
-            inactiveDrawable = typedArray.getResourceId(
+            inactiveDrawableRes = typedArray.getResourceId(
                 R.styleable.MyRatingBar_mrb_drawableEmpty,
                 android.R.drawable.star_big_off
             )
@@ -67,35 +70,68 @@ class MyRatingBar @JvmOverloads constructor(
 
     private fun createStars() {
         (0 until maxStar).forEach { index ->
-            val imageView = AppCompatImageView(this.context)
-            imageView.setImageResource(inactiveDrawable)
+            val ratingItemView = RatingItemView(this.context)
+
+            val activeDrawable =
+                ResourcesCompat.getDrawable(resources, this.activeDrawableRes, context.theme)
+
+            val inactiveDrawable =
+                ResourcesCompat.getDrawable(resources, this.inactiveDrawableRes, context.theme)
+
+            ratingItemView.setDrawableEmpty(inactiveDrawable!!)
+            ratingItemView.setDrawableActive(activeDrawable!!)
+
             if (index != maxStar - 1) {
-                imageView.setPadding(0, 0, padding, 0)
+                ratingItemView.setPadding(0, 0, padding, 0)
             }
-            starList.add(imageView)
-            addView(imageView, index)
+
+            starList.add(ratingItemView)
+            addView(ratingItemView, index)
         }
     }
 
     private fun updateRating() {
-        (0 until currentRating).forEach { index ->
-            starList[index].setImageResource(activeDrawable)
+        if (currentRating < 0) {
+            currentRating = 0f
         }
 
-        (currentRating until maxStar).forEach { index ->
-            starList[index].setImageResource(inactiveDrawable)
+        if (currentRating > maxStar) {
+            currentRating = maxStar.toFloat()
         }
+
+        val fullNumberOfRating: Int = floor(currentRating / 1).toInt()
+        val remainPartOfRating: Float = (currentRating) % 1
+
+
+        (0 until fullNumberOfRating).forEach { index ->
+            starList[index].fillFull()
+        }
+
+        if (fullNumberOfRating <= maxStar - 1) {
+            starList[fullNumberOfRating].fillPartially(remainPartOfRating)
+        }
+
+        if (fullNumberOfRating + 1 <= maxStar - 1) {
+            (fullNumberOfRating + 1 until maxStar).forEach { index ->
+                starList[index].fillEmpty()
+            }
+        }
+
         invalidate()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isIndicator) {
-            val x = event.x.toInt()
+            val x = event.x
 
-            starList.forEachIndexed { index, imageView ->
-                if (x in (imageView.left..imageView.right)) {
-                    setCurrentRating(index + 1)
+            starList.forEachIndexed { index, ratingItem ->
+                val leftEdge = ratingItem.left.toFloat()
+                val rightEdge = ratingItem.right.toFloat()
+                if (x in leftEdge..rightEdge) {
+                    val rating = index + (x - leftEdge) / (rightEdge - leftEdge)
+                    setCurrentRating(rating)
+                    return@forEachIndexed
                 }
             }
         }
@@ -103,7 +139,7 @@ class MyRatingBar @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    fun setCurrentRating(rating: Int) {
+    fun setCurrentRating(rating: Float) {
         currentRating = rating
         updateRating()
     }

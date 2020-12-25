@@ -15,21 +15,16 @@
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
             android:maxHeight="@dimen/movie_background_max_height"
-            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/avengers_background" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/gradient_background"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
+            android:layout_height="0dp"
             android:maxHeight="@dimen/movie_background_max_height"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@id/background"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toStartOf="@id/background"

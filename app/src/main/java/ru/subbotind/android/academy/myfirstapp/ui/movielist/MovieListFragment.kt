@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.coroutines.launch
 import ru.subbotind.android.academy.myfirstapp.R
-import ru.subbotind.android.academy.myfirstapp.data.DataContainer
 import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesListBinding
+import ru.subbotind.android.academy.myfirstapp.domain.MovieInteractor
+import ru.subbotind.android.academy.myfirstapp.domain.MovieInteractorImpl
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
 
@@ -23,6 +26,7 @@ class MovieListFragment : Fragment() {
         const val TAG = "moviesListFragment"
     }
 
+    private var movieInteractor: MovieInteractor? = null
     private var _binding: FragmentMoviesListBinding? = null
     private val binding
         get() = _binding!!
@@ -31,10 +35,9 @@ class MovieListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentMoviesListBinding.inflate(inflater, container, false)
+        _binding = FragmentMoviesListBinding.inflate(inflater, container, false)
 
-        val movieList = DataContainer.getAllMovies()
+        movieInteractor = MovieInteractorImpl(viewLifecycleOwner.lifecycleScope, requireContext())
 
         val movieAdapter = MovieAdapter(
             likeListener = onLikeIconClick(),
@@ -42,7 +45,7 @@ class MovieListFragment : Fragment() {
         )
 
         val spanCount =
-            calculateSpanCount(resources.getDimensionPixelSize(R.dimen.card_view_max_width))
+            calculateSpanCount(resources.getDimensionPixelSize(R.dimen.card_view_min_width))
 
         val gridLayoutManager = GridLayoutManager(activity, spanCount)
 
@@ -58,9 +61,11 @@ class MovieListFragment : Fragment() {
             adapter = movieAdapter
         }
 
-        movieAdapter.submitData(movieList)
-
-        toggleEmptyMoviesStub(movieList)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val movieList = movieInteractor?.getMovies()
+            movieAdapter.submitData(movieList)
+            movieList?.let { toggleEmptyMoviesStub(it) }
+        }
 
         return binding.root
     }
@@ -83,7 +88,7 @@ class MovieListFragment : Fragment() {
         Toast.makeText(activity, "ImageTapped", Toast.LENGTH_LONG).show()
     }
 
-    private fun onMoviePromoCardClick(): (Long) -> Unit = { movieId ->
+    private fun onMoviePromoCardClick(): (Int) -> Unit = { movieId ->
         fragmentManager?.beginTransaction()
             ?.addToBackStack(null)
             ?.add(R.id.fragmentContainer, MovieDetailsFragment.newInstance(movieId))
@@ -98,6 +103,6 @@ class MovieListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        movieInteractor = null
     }
 }
-

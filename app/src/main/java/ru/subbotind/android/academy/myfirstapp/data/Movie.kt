@@ -1,20 +1,15 @@
 package ru.subbotind.android.academy.myfirstapp.data
 
-import androidx.annotation.DrawableRes
-
 data class Movie(
-    val id: Long,
+    val id: Int,
     val title: String,
-    val duration: Int,
-    val pgRating: String,
-    val userRating: Int,
-    val reviewsCount: Int,
-    val isLiked: Boolean,
-    val storyLine: String,
-    val cast: List<Actor>,
-    val tags: String,
-    @DrawableRes
-    val promoImage: Int,
-    @DrawableRes
-    val mainImageBackground: Int
+    val overview: String,
+    val poster: String,
+    val backdrop: String,
+    val ratings: Float,
+    val numberOfRatings: Int,
+    val minimumAge: Int,
+    val runtime: Int,
+    val genres: List<Genre>,
+    val actors: List<Actor>
 )

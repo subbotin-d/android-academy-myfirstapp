@@ -16,6 +16,9 @@
     <dimen name="spacing_very_huge_142">142dp</dimen>
     <dimen name="rating_bar_margin">13dp</dimen>
     <dimen name="card_view_max_width">170dp</dimen>
+    <dimen name="card_view_min_width">140dp</dimen>
+    <dimen name="promo_image_height">250dp</dimen>
+    <dimen name="promo_image_spacing">6dp</dimen>
 
     <!-- text -->
     <dimen name="text_spacing_line_extra">4sp</dimen>
