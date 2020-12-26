@@ -6,18 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import ru.subbotind.android.academy.myfirstapp.R
-import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesListBinding
-import ru.subbotind.android.academy.myfirstapp.domain.MovieInteractor
-import ru.subbotind.android.academy.myfirstapp.domain.MovieInteractorImpl
+import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel
+import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel.MovieListState
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
 
-
+@AndroidEntryPoint
 class MovieListFragment : Fragment() {
 
     companion object {
@@ -26,7 +25,9 @@ class MovieListFragment : Fragment() {
         const val TAG = "moviesListFragment"
     }
 
-    private var movieInteractor: MovieInteractor? = null
+    private val movieListViewModel: MovieListViewModel by viewModels()
+
+    private var movieAdapter: MovieAdapter? = null
     private var _binding: FragmentMoviesListBinding? = null
     private val binding
         get() = _binding!!
@@ -37,9 +38,15 @@ class MovieListFragment : Fragment() {
     ): View {
         _binding = FragmentMoviesListBinding.inflate(inflater, container, false)
 
-        movieInteractor = MovieInteractorImpl(viewLifecycleOwner.lifecycleScope, requireContext())
+        setUpRecycler()
 
-        val movieAdapter = MovieAdapter(
+        movieListViewModel.moviesState.observe(viewLifecycleOwner, ::render)
+
+        return binding.root
+    }
+
+    private fun setUpRecycler() {
+        movieAdapter = MovieAdapter(
             likeListener = onLikeIconClick(),
             cardListener = onMoviePromoCardClick()
         )
@@ -60,27 +67,41 @@ class MovieListFragment : Fragment() {
             layoutManager = gridLayoutManager
             adapter = movieAdapter
         }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            val movieList = movieInteractor?.getMovies()
-            movieAdapter.submitData(movieList)
-            movieList?.let { toggleEmptyMoviesStub(it) }
-        }
-
-        return binding.root
     }
 
-    private fun toggleEmptyMoviesStub(moviesListSize: List<Movie>) {
-        binding.apply {
-            if (moviesListSize.isEmpty()) {
-                noMoviesImage.visibility = View.VISIBLE
-                noMoviesText.visibility = View.VISIBLE
-                movieListRecyclerView.visibility = View.GONE
-            } else {
-                noMoviesImage.visibility = View.GONE
-                noMoviesText.visibility = View.GONE
-                movieListRecyclerView.visibility = View.VISIBLE
+    private fun render(state: MovieListState) {
+        when (state) {
+            MovieListState.EmptyMovies -> showEmptyStub()
+            MovieListState.LoadingStarted -> setLoading(true)
+            MovieListState.LoadingSuccess -> setLoading(false)
+            is MovieListState.Success -> {
+                showMovies()
+                movieAdapter?.submitData(state.movies)
             }
+        }
+    }
+
+    private fun setLoading(inProgress: Boolean) {
+        binding.progressBar.visibility = if (inProgress) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
+    private fun showEmptyStub() {
+        binding.apply {
+            noMoviesImage.visibility = View.VISIBLE
+            noMoviesText.visibility = View.VISIBLE
+            movieListRecyclerView.visibility = View.GONE
+        }
+    }
+
+    private fun showMovies() {
+        binding.apply {
+            movieListRecyclerView.visibility = View.VISIBLE
+            noMoviesImage.visibility = View.GONE
+            noMoviesText.visibility = View.GONE
         }
     }
 
@@ -103,6 +124,6 @@ class MovieListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        movieInteractor = null
+        movieAdapter = null
     }
 }
