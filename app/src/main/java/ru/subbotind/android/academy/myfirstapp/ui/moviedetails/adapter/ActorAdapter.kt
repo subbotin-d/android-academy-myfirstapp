@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.subbotind.android.academy.myfirstapp.R
-import ru.subbotind.android.academy.myfirstapp.data.Actor
 import ru.subbotind.android.academy.myfirstapp.databinding.ActorItemBinding
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
 
 class ActorAdapter : ListAdapter<Actor, ActorViewHolder>(ActorDiffUtilCallback()) {
 
