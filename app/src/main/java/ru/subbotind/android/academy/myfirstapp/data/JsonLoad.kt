@@ -7,6 +7,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import ru.subbotind.android.academy.myfirstapp.data.entity.Actor
+import ru.subbotind.android.academy.myfirstapp.data.entity.Genre
+import ru.subbotind.android.academy.myfirstapp.data.entity.Movie
 
 
 private val jsonFormat = Json { ignoreUnknownKeys = true }

@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import ru.subbotind.android.academy.myfirstapp.R
-import ru.subbotind.android.academy.myfirstapp.data.Actor
-import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesDetailsBinding
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
 import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDetailsViewModel
 import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDetailsViewModel.MovieDetailsState
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
