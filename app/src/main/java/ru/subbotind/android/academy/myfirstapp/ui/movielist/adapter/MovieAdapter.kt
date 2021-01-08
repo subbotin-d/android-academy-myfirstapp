@@ -23,7 +23,7 @@ class MovieAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            MOVIE_ITEM_ID -> MovieViewHolder.from(parent)
+            MOVIE_ITEM_ID -> MovieViewHolder.from(parent, cardListener)
             MOVIE_HEADER_ITEM_ID -> MovieHeaderViewHolder.from(parent)
             else -> throw NoSuchElementException("Adapter does not know this view type")
         }
@@ -71,24 +71,33 @@ sealed class DataItem {
 }
 
 class MovieViewHolder private constructor(
-    private val binding: MovieItemBinding
+    private val binding: MovieItemBinding,
+    cardListener: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
-        fun from(parent: ViewGroup): MovieViewHolder {
+        fun from(parent: ViewGroup, cardListener: (Int) -> Unit): MovieViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding =
                 MovieItemBinding.inflate(inflater, parent, false)
-            return MovieViewHolder(binding)
+            return MovieViewHolder(binding, cardListener)
+        }
+    }
+
+    private var movieId: Int? = null
+
+    init {
+        binding.moviePromoCard.setOnDebouncedClickListener {
+            movieId?.let { id ->
+                cardListener(id)
+            }
         }
     }
 
     fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Int) -> Unit) {
-        binding.apply {
-            moviePromoCard.setOnDebouncedClickListener {
-                cardListener(movie.id)
-            }
+        this.movieId = movie.id
 
+        binding.apply {
             Glide
                 .with(itemView.context)
                 .load(movie.poster)
