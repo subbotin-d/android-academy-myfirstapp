@@ -82,6 +82,8 @@ class MovieDetailsFragment : Fragment() {
 
     private fun showMovieData(movie: Movie) {
         binding.apply {
+            backButton.visibility = View.VISIBLE
+
             Glide.with(requireContext())
                 .load(movie.backdrop)
                 .fitCenter()
@@ -92,10 +94,13 @@ class MovieDetailsFragment : Fragment() {
                 movie.minimumAge.toString()
             )
 
+            castLineLabel.visibility = View.VISIBLE
+
             movieTitleText.text = movie.title
 
             tagText.text = movie.genres.joinToString { it.name }
 
+            ratingBar.visibility = View.VISIBLE
             ratingBar.setCurrentRating(movie.ratings / 2)
 
             totalReviewsText.text = getString(
@@ -103,6 +108,7 @@ class MovieDetailsFragment : Fragment() {
                 movie.numberOfRatings.toString()
             )
 
+            storyLineLabel.visibility = View.VISIBLE
             storyLineText.text = movie.overview
 
             movieDurationText.text = resources.getString(
