@@ -127,11 +127,6 @@ class MovieViewHolder private constructor(
             movieTagsText.text = movie.genres.joinToString { it.name }
 
             movieTitle.text = movie.title
-
-            movieDurationText.text = itemView.resources.getString(
-                R.string.movie_duration,
-                movie.runtime.toString()
-            )
         }
     }
 }
