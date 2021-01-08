@@ -127,22 +127,11 @@
             android:layout_marginStart="@dimen/spacing_low"
             android:layout_marginTop="@dimen/spacing_low"
             android:layout_marginEnd="@dimen/spacing_low"
-            app:layout_constraintBottom_toTopOf="@id/movie_duration_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movie_main_image"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Avengers: End Game" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/movie_duration_text"
-            style="@style/durationStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/movie_title"
-            app:layout_constraintStart_toStartOf="@id/movie_title"
-            app:layout_constraintTop_toBottomOf="@id/movie_title"
-            tools:text="134 MIN" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

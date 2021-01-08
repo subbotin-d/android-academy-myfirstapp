@@ -104,6 +104,11 @@ class MovieDetailsFragment : Fragment() {
             )
 
             storyLineText.text = movie.overview
+
+            movieDurationText.text = resources.getString(
+                R.string.movie_duration,
+                movie.runtime.toString()
+            )
         }
     }
 
