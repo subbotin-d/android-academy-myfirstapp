@@ -39,8 +39,8 @@ class MovieListFragment : Fragment() {
         _binding = FragmentMoviesListBinding.inflate(inflater, container, false)
 
         setUpRecycler()
-
         movieListViewModel.moviesState.observe(viewLifecycleOwner, ::render)
+        movieListViewModel.loadMovies()
 
         return binding.root
     }
