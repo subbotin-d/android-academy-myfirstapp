@@ -43,6 +43,7 @@
             android:text="@string/back_button_text"
             android:textAllCaps="false"
             android:textColor="@color/medium_gray"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeWidth="0dp"
@@ -99,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/spacing_tiny"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_text"
             app:mrb_drawableActive="@drawable/ic_active_star_icon"
@@ -126,6 +128,7 @@
             android:layout_marginTop="@dimen/spacing_big"
             android:text="@string/story_line_label"
             android:textAppearance="@style/Subtitle2"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/total_reviews_text"
             tools:viewBindingIgnore="true" />
@@ -156,6 +159,7 @@
             android:layout_marginTop="@dimen/spacing_big"
             android:text="@string/cast_line_label"
             android:textAppearance="@style/Subtitle2"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/story_line_text"
             tools:viewBindingIgnore="true" />
