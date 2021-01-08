@@ -6,25 +6,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.subbotind.android.academy.myfirstapp.data.Movie
-import ru.subbotind.android.academy.myfirstapp.domain.MovieInteractor
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
+import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMoviesUseCase
 
 class MovieListViewModel @ViewModelInject constructor(
-    private val movieInteractor: MovieInteractor
+    private val getMoviesUseCase: GetMoviesUseCase
 ) : ViewModel() {
 
     private val _moviesState: MutableLiveData<MovieListState> =
-        MutableLiveData(MovieListState.LoadingStarted)
+        MutableLiveData()
     val moviesState: LiveData<MovieListState> = _moviesState
 
-    init {
-        loadMovies()
-    }
-
-    private fun loadMovies() {
+    fun loadMovies() {
         viewModelScope.launch {
             _moviesState.value = MovieListState.LoadingStarted
-            val movieList = movieInteractor.getMovies()
+            val movieList = getMoviesUseCase.getMovies()
             _moviesState.value = MovieListState.LoadingSuccess
 
             if (movieList.isEmpty()) {
