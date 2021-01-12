@@ -19,4 +19,19 @@
     <string name="hemsworth_c">Chris Hemsworth</string>
     <string name="movies_list_header">Movies list</string>
     <string name="no_movies_available_text">There are no movies available</string>
+
+    <!-- No internet -->
+    <string name="retry_button">Try again!</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="no_internet_title">No internet</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="no_internet_message">There is no internet connection.\nPlease turn internet on
+        and try again!</string>
+    <string name="bad_request_error_text">Application has sent wrong parameters to the
+        server!</string>
+    <string name="server_internal_error_text">Something was wrong on the server side</string>
+    <string name="server_unavailable_error_text">Server is unavailable now! Please try 
+        later</string>
+    <string name="not_found_error_text">Server can\'t find requested entity</string>
+    <string name="unexpected_error_text">Unexpected error, please contact to @subbotin_d</string>
 </resources>
