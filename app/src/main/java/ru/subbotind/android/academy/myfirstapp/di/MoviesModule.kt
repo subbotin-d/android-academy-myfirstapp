@@ -3,7 +3,6 @@ package ru.subbotind.android.academy.myfirstapp.di
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import retrofit2.Retrofit
@@ -39,10 +38,10 @@ interface MoviesModule {
     fun bindMovieRepository(movieRepository: MovieRepositoryImpl): MovieRepository
 
     @Binds
-    @Reusable
+    @Singleton
     fun bindGetMoviesUseCase(getMoviesUseCase: GetMoviesUseCaseImpl): GetMoviesUseCase
 
     @Binds
-    @Reusable
+    @Singleton
     fun bindGetMovieUseCase(getMovieUseCase: GetMovieUseCaseImpl): GetMovieUseCase
 }

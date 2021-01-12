@@ -2,6 +2,7 @@ package ru.subbotind.android.academy.myfirstapp.data.network.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import okio.IOException
 import ru.subbotind.android.academy.myfirstapp.BuildConfig
 
 class MovieApiHeaderInterceptor : Interceptor {
@@ -20,5 +21,20 @@ class MovieApiHeaderInterceptor : Interceptor {
             .build()
 
         return chain.proceed(request)
+    }
+}
+
+class OkHttpExceptionInterceptor : Interceptor {
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        try {
+            return chain.proceed(chain.request())
+        } catch (e: Throwable) {
+            if (e is IOException) {
+                throw e
+            } else {
+                throw IOException(e)
+            }
+        }
     }
 }

@@ -19,4 +19,10 @@
     <string name="hemsworth_c">Chris Hemsworth</string>
     <string name="movies_list_header">Movies list</string>
     <string name="no_movies_available_text">There are no movies available</string>
+
+    <!-- No internet -->
+    <string name="no_internet_button">Try again!</string>
+    <string name="no_internet_title">No internet</string>
+    <string name="no_internet_message">There is no internet connection.\nPlease turn internet on
+        and try again!</string>
 </resources>

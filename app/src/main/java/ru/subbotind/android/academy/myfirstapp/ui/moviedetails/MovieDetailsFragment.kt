@@ -18,16 +18,19 @@ import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDe
 import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDetailsViewModel.MovieDetailsState
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.adapter.ActorAdapter
+import ru.subbotind.android.academy.myfirstapp.ui.nointernet.NoInternetDialogFragment
 
-private const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
+const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
 
 @AndroidEntryPoint
-class MovieDetailsFragment : Fragment() {
+class MovieDetailsFragment : Fragment(), NoInternetDialogFragment.OnDialogButtonClickListener {
 
     companion object {
         fun newInstance(movieId: Int) = MovieDetailsFragment().apply {
             arguments = bundleOf(MOVIE_ID_KEY to movieId)
         }
+
+        private const val DEFAULT_DIALOG_REQUEST_CODE = 0
     }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModels()
@@ -56,15 +59,19 @@ class MovieDetailsFragment : Fragment() {
 
         movieDetailsViewModel.movieState.observe(viewLifecycleOwner, ::renderMovie)
 
-        movieId?.let { movieDetailsViewModel.loadMovie(it) }
-            ?: throw IllegalArgumentException("movieId is null, but should not")
-
         return binding.root
+    }
+
+    private fun loadMovie() {
+        movieDetailsViewModel.loadMovie()
     }
 
     private fun renderMovie(state: MovieDetailsState) {
         when (state) {
-            MovieDetailsState.LoadingStarted -> setLoading(true)
+            MovieDetailsState.LoadingStarted -> {
+                hideInternetErrorDialog()
+                setLoading(true)
+            }
             MovieDetailsState.LoadingSuccess -> setLoading(false)
 
             is MovieDetailsState.MovieWithActors -> {
@@ -77,7 +84,38 @@ class MovieDetailsFragment : Fragment() {
                 hideCastSection()
                 showMovieData(state.movie)
             }
+
+            MovieDetailsState.InternetError -> showInternetErrorDialog()
+            is MovieDetailsState.ServerError -> showInternetErrorDialog()
         }
+    }
+
+    private fun showInternetErrorDialog() {
+//        noInternetDialogFragment =
+//            parentFragmentManager.findFragmentByTag(NoInternetDialogFragment::class.java.simpleName) as? NoInternetDialogFragment
+//        Log.d("NoInternetDialogFragmen", "${noInternetDialogFragment.toString()} found!")
+//
+//        if (noInternetDialogFragment == null) {
+//            noInternetDialogFragment = NoInternetDialogFragment.newInstance()
+//            Log.d("NoInternetDialogFragmen", "${noInternetDialogFragment.toString()} created!")
+//
+//            parentFragmentManager.let {
+//                noInternetDialogFragment?.show(
+//                    it,
+//                    NoInternetDialogFragment::class.java.simpleName
+//                )
+//            }
+//        }
+//        Toast.makeText(requireActivity(), "123", Toast.LENGTH_LONG).show()
+//        noInternetDialogFragment?.setTargetFragment(this, DEFAULT_DIALOG_REQUEST_CODE)
+        binding.errorStr.visibility = View.VISIBLE
+        binding.retryBtn.visibility = View.VISIBLE
+    }
+
+    private fun hideInternetErrorDialog() {
+//        noInternetDialogFragment?.dismiss()
+        binding.errorStr.visibility = View.GONE
+        binding.retryBtn.visibility = View.GONE
     }
 
     private fun showMovieData(movie: Movie) {
@@ -147,6 +185,10 @@ class MovieDetailsFragment : Fragment() {
         binding.backButton.setOnDebouncedClickListener {
             fragmentManager?.popBackStack()
         }
+
+        binding.retryBtn.setOnDebouncedClickListener {
+            onDialogButtonClick()
+        }
     }
 
     private fun hideCastSection() {
@@ -167,5 +209,11 @@ class MovieDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         actorAdapter = null
+        movieDetailsViewModel.movieState.removeObservers(viewLifecycleOwner)
+//        noInternetDialogFragment = null
+    }
+
+    override fun onDialogButtonClick() {
+        loadMovie()
     }
 }
