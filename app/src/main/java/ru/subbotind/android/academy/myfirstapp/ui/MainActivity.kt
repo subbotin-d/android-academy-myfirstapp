@@ -20,9 +20,6 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, movieListFragment, MovieListFragment.TAG)
                 .commit()
-        } else {
-            movieListFragment =
-                supportFragmentManager.findFragmentByTag(MovieListFragment.TAG) as MovieListFragment
         }
     }
 }
