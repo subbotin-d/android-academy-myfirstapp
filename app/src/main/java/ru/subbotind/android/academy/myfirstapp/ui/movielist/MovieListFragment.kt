@@ -11,13 +11,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesListBinding
+import ru.subbotind.android.academy.myfirstapp.presentation.error.ErrorState
 import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel
 import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel.MovieListState
+import ru.subbotind.android.academy.myfirstapp.ui.error.OnCancelButtonClickListener
+import ru.subbotind.android.academy.myfirstapp.ui.error.OnRetryButtonClickListener
+import ru.subbotind.android.academy.myfirstapp.ui.extensions.showInternetErrorDialog
+import ru.subbotind.android.academy.myfirstapp.ui.extensions.showRetryErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
 
 @AndroidEntryPoint
-class MovieListFragment : Fragment() {
+class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButtonClickListener {
 
     companion object {
         fun newInstance() = MovieListFragment()
@@ -40,7 +45,7 @@ class MovieListFragment : Fragment() {
 
         setUpRecycler()
         movieListViewModel.moviesState.observe(viewLifecycleOwner, ::render)
-        movieListViewModel.loadMovies()
+        movieListViewModel.errorState.observe(viewLifecycleOwner, ::handleError)
 
         return binding.root
     }
@@ -81,6 +86,14 @@ class MovieListFragment : Fragment() {
         }
     }
 
+    private fun handleError(errorState: ErrorState) {
+        when (errorState) {
+            ErrorState.InternetError -> showInternetErrorDialog()
+            is ErrorState.ServerError -> showRetryErrorDialog(errorState.cause)
+            is ErrorState.UnexpectedError -> showRetryErrorDialog(errorState.cause)
+        }
+    }
+
     private fun setLoading(inProgress: Boolean) {
         binding.progressBar.visibility = if (inProgress) {
             View.VISIBLE
@@ -110,15 +123,27 @@ class MovieListFragment : Fragment() {
     }
 
     private fun onMoviePromoCardClick(): (Int) -> Unit = { movieId ->
-        fragmentManager?.beginTransaction()
-            ?.addToBackStack(null)
-            ?.add(R.id.fragmentContainer, MovieDetailsFragment.newInstance(movieId))
-            ?.commit()
+        parentFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .add(R.id.fragmentContainer, MovieDetailsFragment.newInstance(movieId))
+            .commit()
     }
 
     private fun calculateSpanCount(spanWidthPixels: Int): Int {
         val screenWidthPixels = requireContext().resources.displayMetrics.widthPixels
         return (screenWidthPixels / spanWidthPixels + 0.5).toInt()
+    }
+
+    override fun onRetryButtonClick() {
+        loadMovies()
+    }
+
+    private fun loadMovies() {
+        movieListViewModel.loadMovies()
+    }
+
+    override fun onCancelButtonClick() {
+        activity?.finish()
     }
 
     override fun onDestroyView() {
