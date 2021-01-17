@@ -5,9 +5,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MovieModel(
+    @SerialName("id")
     val id: Int,
+    @SerialName("adult")
     val adult: Boolean,
+    @SerialName("title")
     val title: String,
+    @SerialName("overview")
     val overview: String,
     @SerialName("backdrop_path")
     val backdropPath: String? = null,
@@ -15,6 +19,7 @@ data class MovieModel(
     val posterPath: String? = null,
     @SerialName("genre_ids")
     val genreIDS: List<Int>,
+    @SerialName("popularity")
     val popularity: Double,
     @SerialName("vote_average")
     val voteAverage: Float,
