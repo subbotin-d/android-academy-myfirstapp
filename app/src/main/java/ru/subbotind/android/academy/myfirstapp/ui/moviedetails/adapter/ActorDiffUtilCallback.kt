@@ -1,7 +1,7 @@
 package ru.subbotind.android.academy.myfirstapp.ui.moviedetails.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.subbotind.android.academy.myfirstapp.data.Actor
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
 
 class ActorDiffUtilCallback : DiffUtil.ItemCallback<Actor>() {
 

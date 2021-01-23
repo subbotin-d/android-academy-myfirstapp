@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.subbotind.android.academy.myfirstapp.R
-import ru.subbotind.android.academy.myfirstapp.data.Movie
 import ru.subbotind.android.academy.myfirstapp.databinding.MovieItemBinding
+import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 
 class MovieAdapter(
@@ -127,11 +127,6 @@ class MovieViewHolder private constructor(
             movieTagsText.text = movie.genres.joinToString { it.name }
 
             movieTitle.text = movie.title
-
-            movieDurationText.text = itemView.resources.getString(
-                R.string.movie_duration,
-                movie.runtime.toString()
-            )
         }
     }
 }

@@ -43,6 +43,7 @@
             android:text="@string/back_button_text"
             android:textAllCaps="false"
             android:textColor="@color/medium_gray"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeWidth="0dp"
@@ -73,14 +74,24 @@
             tools:text="@string/movie_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/movie_duration_text"
+            style="@style/durationStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/movie_title_text"
+            app:layout_constraintTop_toBottomOf="@id/movie_title_text"
+            tools:text="134 MIN" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tag_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_tiny"
             android:gravity="center_vertical"
             android:textAppearance="@style/tagStyle"
             app:layout_constraintEnd_toEndOf="@id/movie_title_text"
-            app:layout_constraintStart_toStartOf="@id/movie_title_text"
-            app:layout_constraintTop_toBottomOf="@id/movie_title_text"
+            app:layout_constraintStart_toStartOf="@id/movie_duration_text"
+            app:layout_constraintTop_toBottomOf="@id/movie_duration_text"
             tools:text="@string/tag_text" />
 
         <ru.subbotind.android.academy.myratingbar.MyRatingBar
@@ -89,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_huge"
             android:layout_marginTop="@dimen/spacing_tiny"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_text"
             app:mrb_drawableActive="@drawable/ic_active_star_icon"
@@ -116,6 +128,7 @@
             android:layout_marginTop="@dimen/spacing_big"
             android:text="@string/story_line_label"
             android:textAppearance="@style/Subtitle2"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/total_reviews_text"
             tools:viewBindingIgnore="true" />
@@ -146,6 +159,7 @@
             android:layout_marginTop="@dimen/spacing_big"
             android:text="@string/cast_line_label"
             android:textAppearance="@style/Subtitle2"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/story_line_text"
             tools:viewBindingIgnore="true" />
