@@ -59,4 +59,8 @@ interface MoviesModule {
     @Binds
     @Reusable
     fun bindFetchMoviesUseCase(fetchMoviesUseCase: FetchMoviesUseCaseImpl): FetchMoviesUseCase
+
+    @Binds
+    @Reusable
+    fun bindFetchMovieUseCase(fetchMovieUseCase: FetchMovieUseCaseImpl): FetchMovieUseCase
 }

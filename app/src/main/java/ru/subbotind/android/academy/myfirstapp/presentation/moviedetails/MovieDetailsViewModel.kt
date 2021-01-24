@@ -7,14 +7,15 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.subbotind.android.academy.myfirstapp.data.network.exception.ServerErrorException
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
+import ru.subbotind.android.academy.myfirstapp.domain.usecase.FetchMovieUseCase
 import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMovieUseCase
 import ru.subbotind.android.academy.myfirstapp.presentation.error.ErrorState
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MOVIE_ID_KEY
 import ru.subbotind.android.academy.myfirstapp.utils.SingleLiveEvent
-import java.io.IOException
 
 class MovieDetailsViewModel @ViewModelInject constructor(
     private val getMovieUseCase: GetMovieUseCase,
+    private val fetchMovieUseCase: FetchMovieUseCase,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -23,20 +24,27 @@ class MovieDetailsViewModel @ViewModelInject constructor(
     )
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable: Throwable ->
-        _movieState.value = MovieDetailsState.LoadingSuccess
+        _progressState.value = false
 
         when (throwable) {
             is ServerErrorException ->
                 _errorState.value = ErrorState.ServerError(throwable.reason)
 
-            is IOException -> _errorState.value = ErrorState.InternetError
-
             else -> _errorState.value = ErrorState.UnexpectedError(throwable.message ?: "")
         }
     }
 
-    private val _movieState: MutableLiveData<MovieDetailsState> = MutableLiveData()
-    val movieState: LiveData<MovieDetailsState> = _movieState
+    val movieState: LiveData<MovieDetailsState>
+        get() = getMovieUseCase.getMovie(movieId).asLiveData().map { movie ->
+            if (movie.actors.isNullOrEmpty()) {
+                MovieDetailsState.MovieWithoutActors(movie)
+            } else {
+                MovieDetailsState.MovieWithActors(movie)
+            }
+        }
+
+    private val _progressState: MutableLiveData<Boolean> = MutableLiveData()
+    val progressState: LiveData<Boolean> = _progressState
 
     private val _errorState: SingleLiveEvent<ErrorState> = SingleLiveEvent()
     val errorState: LiveData<ErrorState> = _errorState
@@ -47,21 +55,13 @@ class MovieDetailsViewModel @ViewModelInject constructor(
 
     fun loadMovie() {
         viewModelScope.launch(exceptionHandler) {
-            _movieState.value = MovieDetailsState.LoadingStarted
-            val movie = getMovieUseCase.getMovie(movieId)
-            _movieState.value = MovieDetailsState.LoadingSuccess
-
-            _movieState.value = if (movie.actors.isNullOrEmpty()) {
-                MovieDetailsState.MovieWithoutActors(movie)
-            } else {
-                MovieDetailsState.MovieWithActors(movie)
-            }
+            _progressState.value = true
+            fetchMovieUseCase.fetchMovie(movieId)
+            _progressState.value = false
         }
     }
 
     sealed class MovieDetailsState {
-        object LoadingStarted : MovieDetailsState()
-        object LoadingSuccess : MovieDetailsState()
         class MovieWithActors(val movie: Movie) : MovieDetailsState()
         class MovieWithoutActors(val movie: Movie) : MovieDetailsState()
     }

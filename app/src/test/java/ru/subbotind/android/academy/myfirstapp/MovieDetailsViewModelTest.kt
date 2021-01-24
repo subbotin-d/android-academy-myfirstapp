@@ -4,7 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -16,6 +18,7 @@ import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
+import ru.subbotind.android.academy.myfirstapp.domain.usecase.FetchMovieUseCase
 import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMovieUseCase
 import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDetailsViewModel
 import ru.subbotind.android.academy.myfirstapp.rule.TestCoroutineRule
@@ -34,12 +37,19 @@ class MovieDetailsViewModelTest {
     @Captor
     private lateinit var argumentCaptor: ArgumentCaptor<MovieDetailsViewModel.MovieDetailsState>
 
+    @Captor
+    private lateinit var progressArgumentCaptor: ArgumentCaptor<Boolean>
+
     @Mock
     private lateinit var observer: Observer<MovieDetailsViewModel.MovieDetailsState>
 
+    @Mock
+    private lateinit var progressObserver: Observer<Boolean>
+
     private val savedStateHandle: SavedStateHandle = SavedStateHandle(mapOf(MOVIE_ID_KEY to 1))
     private val getMovieUseCase = mock(GetMovieUseCase::class.java)
-    private val movieDetailsViewModel = MovieDetailsViewModel(getMovieUseCase, savedStateHandle)
+    private val fetchMovieUseCase = mock(FetchMovieUseCase::class.java)
+    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
 
     private val actors: List<Actor> = listOf(
         Actor(1, "Jackie Chan", "http://baseurl.com/jackie"),
@@ -67,62 +77,50 @@ class MovieDetailsViewModelTest {
     )
 
     @Test
-    fun `WHEN movie without actors fetched EXPECT correct state order`() = runBlockingTest {
-        `when`(getMovieUseCase.getMovie(1)).thenReturn(movieWithoutActors)
+    fun `check progress bar state order`() = runBlockingTest {
+        movieDetailsViewModel =
+            MovieDetailsViewModel(getMovieUseCase, fetchMovieUseCase, savedStateHandle)
+        movieDetailsViewModel.progressState.observeForever(progressObserver)
 
-        movieDetailsViewModel.movieState.observeForever(observer)
         movieDetailsViewModel.loadMovie()
 
-        verify(observer, times(3)).onChanged(argumentCaptor.capture())
+        verify(progressObserver, times(3)).onChanged(progressArgumentCaptor.capture())
 
-        val values = argumentCaptor.allValues
+        val progressValues = progressArgumentCaptor.allValues
 
-        assertTrue(values[0] is MovieDetailsViewModel.MovieDetailsState.LoadingStarted)
-        assertTrue(values[1] is MovieDetailsViewModel.MovieDetailsState.LoadingSuccess)
-        assertTrue(values[2] is MovieDetailsViewModel.MovieDetailsState.MovieWithoutActors)
-    }
-
-    @Test
-    fun `WHEN movie with actors fetched EXPECT correct state order`() = runBlockingTest {
-        `when`(getMovieUseCase.getMovie(1)).thenReturn(movieWithActors)
-
-        movieDetailsViewModel.movieState.observeForever(observer)
-        movieDetailsViewModel.loadMovie()
-
-        verify(observer, times(3)).onChanged(argumentCaptor.capture())
-
-        val values = argumentCaptor.allValues
-
-        assertTrue(values[0] is MovieDetailsViewModel.MovieDetailsState.LoadingStarted)
-        assertTrue(values[1] is MovieDetailsViewModel.MovieDetailsState.LoadingSuccess)
-        assertTrue(values[2] is MovieDetailsViewModel.MovieDetailsState.MovieWithActors)
+        assertTrue(progressValues[1])
+        assertFalse(progressValues[2])
     }
 
     @Test
     fun `check MovieWithActors content`() = runBlockingTest {
-        `when`(getMovieUseCase.getMovie(1)).thenReturn(movieWithActors)
+        `when`(getMovieUseCase.getMovie(1)).thenReturn(flowOf(movieWithActors))
+        movieDetailsViewModel =
+            MovieDetailsViewModel(getMovieUseCase, fetchMovieUseCase, savedStateHandle)
 
         movieDetailsViewModel.movieState.observeForever(observer)
         movieDetailsViewModel.loadMovie()
 
-        verify(observer, times(3)).onChanged(argumentCaptor.capture())
+        verify(observer).onChanged(argumentCaptor.capture())
 
         val values = argumentCaptor.allValues
 
-        assertTrue((values[2] as MovieDetailsViewModel.MovieDetailsState.MovieWithActors).movie == movieWithActors)
+        assertTrue((values[0] as MovieDetailsViewModel.MovieDetailsState.MovieWithActors).movie == movieWithActors)
     }
 
     @Test
     fun `check MovieWithoutActors content`() = coroutineTestRule.dispatcher.runBlockingTest {
-        `when`(getMovieUseCase.getMovie(1)).thenReturn(movieWithoutActors)
+        `when`(getMovieUseCase.getMovie(1)).thenReturn(flowOf(movieWithoutActors))
+        movieDetailsViewModel =
+            MovieDetailsViewModel(getMovieUseCase, fetchMovieUseCase, savedStateHandle)
 
         movieDetailsViewModel.movieState.observeForever(observer)
         movieDetailsViewModel.loadMovie()
 
-        verify(observer, times(3)).onChanged(argumentCaptor.capture())
+        verify(observer).onChanged(argumentCaptor.capture())
 
         val values = argumentCaptor.allValues
 
-        assertTrue((values[2] as MovieDetailsViewModel.MovieDetailsState.MovieWithoutActors).movie == movieWithoutActors)
+        assertTrue((values[0] as MovieDetailsViewModel.MovieDetailsState.MovieWithoutActors).movie == movieWithoutActors)
     }
 }
