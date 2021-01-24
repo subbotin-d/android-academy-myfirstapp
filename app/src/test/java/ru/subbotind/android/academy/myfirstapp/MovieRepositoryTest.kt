@@ -15,6 +15,7 @@ import ru.subbotind.android.academy.myfirstapp.data.model.MovieCreditsModel
 import ru.subbotind.android.academy.myfirstapp.data.model.MovieModel
 import ru.subbotind.android.academy.myfirstapp.data.repository.BaseImageUrlRepository
 import ru.subbotind.android.academy.myfirstapp.data.repository.MovieRepositoryImpl
+import ru.subbotind.android.academy.myfirstapp.data.repository.converter.MovieConverter
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Genre
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie

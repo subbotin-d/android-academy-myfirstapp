@@ -2,8 +2,8 @@ package ru.subbotind.android.academy.myfirstapp.data.datasource
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
-import ru.subbotind.android.academy.myfirstapp.data.converter.MovieEntityConverter
 import ru.subbotind.android.academy.myfirstapp.data.dao.MovieDao
+import ru.subbotind.android.academy.myfirstapp.data.repository.converter.MovieEntityConverter
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
 import javax.inject.Inject
 
