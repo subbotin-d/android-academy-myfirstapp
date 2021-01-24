@@ -8,6 +8,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import retrofit2.Retrofit
 import retrofit2.create
+import ru.subbotind.android.academy.myfirstapp.data.dao.MovieDao
+import ru.subbotind.android.academy.myfirstapp.data.database.MovieDataBase
+import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSource
+import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSourceImpl
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSourceImpl
 import ru.subbotind.android.academy.myfirstapp.data.network.MovieService
@@ -28,11 +32,20 @@ interface MoviesModule {
         @Singleton
         fun provideMovieService(retrofit: Retrofit): MovieService =
             retrofit.create()
+
+        @Provides
+        @Singleton
+        fun provideMovieDao(movieDataBase: MovieDataBase): MovieDao =
+            movieDataBase.movieDao()
     }
 
     @Binds
     @Singleton
     fun bindMovieRemoteDataSource(moveDataSource: MovieRemoteDataSourceImpl): MovieRemoteDataSource
+
+    @Binds
+    @Singleton
+    fun bindMovieLocalDataSource(moveDataSource: MovieLocalDataSourceImpl): MovieLocalDataSource
 
     @Binds
     @Singleton
