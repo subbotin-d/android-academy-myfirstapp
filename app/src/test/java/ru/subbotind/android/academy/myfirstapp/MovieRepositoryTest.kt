@@ -1,14 +1,16 @@
 package ru.subbotind.android.academy.myfirstapp
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+import ru.subbotind.android.academy.myfirstapp.data.converter.MovieConverter
 import ru.subbotind.android.academy.myfirstapp.data.datasource.GenreRemoteDataSource
+import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.model.DetailedMovieModel
 import ru.subbotind.android.academy.myfirstapp.data.model.MovieCreditsModel
@@ -30,13 +32,18 @@ class MovieRepositoryTest {
     private val movieRemoteDataSource: MovieRemoteDataSource =
         mock(MovieRemoteDataSource::class.java)
 
+    private val movieLocalDataSource: MovieLocalDataSource =
+        mock(MovieLocalDataSource::class.java)
+
     private val genresRemoteDataSource: GenreRemoteDataSource =
         mock(GenreRemoteDataSource::class.java)
 
     private val movieRepository = MovieRepositoryImpl(
         movieRemoteDataSource,
+        movieLocalDataSource,
         baseImageUrlRepository,
-        genresRemoteDataSource
+        genresRemoteDataSource,
+        MovieConverter()
     )
 
     private val baseUrl = "http://movie.org"
@@ -55,7 +62,6 @@ class MovieRepositoryTest {
             adult = true,
             backdropPath = "/hi",
             genreIDS = listOf(1, 2),
-            popularity = 2.50,
             posterPath = "/poster/hi",
             voteAverage = 7.55F,
             voteCount = 500
@@ -69,7 +75,6 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genreIDS = listOf(),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -82,7 +87,6 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genreIDS = listOf(1, 2, 5),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -95,7 +99,6 @@ class MovieRepositoryTest {
             adult = false,
             overview = "Avengers can do it",
             genreIDS = listOf(),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -107,7 +110,6 @@ class MovieRepositoryTest {
             title = "Avengers",
             adult = false,
             genres = listOf(),
-            popularity = 2.50F,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -119,13 +121,11 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genres = genreList,
-            popularity = 2.50F,
             voteAverage = 7.55F,
             voteCount = 500,
             backdropPath = "/backdrop/path",
             posterPath = "/poster/path",
             runtime = 100,
-            tagline = "Tag1, Tag2"
         )
 
     private val actors: List<Actor> = listOf(
@@ -150,8 +150,6 @@ class MovieRepositoryTest {
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithMaximumInfo)
 
-            val actualMovieList = movieRepository.getMovies()
-
             val expectedMovieList = listOf(
                 Movie(
                     id = 1,
@@ -166,7 +164,9 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
@@ -175,8 +175,6 @@ class MovieRepositoryTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithWithMinimumInfo)
-
-            val actualMovieList = movieRepository.getMovies()
 
             val expectedMovieList = listOf(
                 Movie(
@@ -190,7 +188,11 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(baseImageUrlRepository).getBaseUrl()
+            verify(genresRemoteDataSource).getGenres()
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test(expected = IllegalArgumentException::class)
@@ -198,8 +200,9 @@ class MovieRepositoryTest {
         `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
         `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
         `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithUnexpectedGenreId)
+        `when`(movieLocalDataSource.getMovies()).thenReturn(flowOf(emptyList()))
 
-        movieRepository.getMovies()
+        movieRepository.fetchMovies()
     }
 
     @Test
@@ -209,8 +212,6 @@ class MovieRepositoryTest {
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
 
-            val actualMovieList = movieRepository.getMovies()
-
             val expectedMovieList = listOf(
                 Movie(
                     id = 1,
@@ -223,7 +224,9 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
@@ -233,8 +236,6 @@ class MovieRepositoryTest {
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
 
-            val actualMovieList = movieRepository.getMovies()
-
             val expectedMovieList = listOf(
                 Movie(
                     id = 1,
@@ -247,7 +248,9 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
