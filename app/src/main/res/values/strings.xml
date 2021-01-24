@@ -18,7 +18,8 @@
     <string name="rufalo_m">Mark Ruffalo</string>
     <string name="hemsworth_c">Chris Hemsworth</string>
     <string name="movies_list_header">Movies list</string>
-    <string name="no_movies_available_text">There are no movies available</string>
+    <string name="no_movies_available_text">Please, wait some seconds while we fetching
+        movies\n\nMake sure that internet is available</string>
 
     <!-- No internet -->
     <string name="retry_button">Try again!</string>
