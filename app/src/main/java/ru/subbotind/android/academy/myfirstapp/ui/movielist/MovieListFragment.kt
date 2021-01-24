@@ -16,7 +16,6 @@ import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListV
 import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel.MovieListState
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnCancelButtonClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnRetryButtonClickListener
-import ru.subbotind.android.academy.myfirstapp.ui.extensions.showInternetErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.showRetryErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
@@ -87,7 +86,6 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
 
     private fun handleError(errorState: ErrorState) {
         when (errorState) {
-            ErrorState.InternetError -> showInternetErrorDialog()
             is ErrorState.ServerError -> showRetryErrorDialog(errorState.cause)
             is ErrorState.UnexpectedError -> showRetryErrorDialog(errorState.cause)
         }
