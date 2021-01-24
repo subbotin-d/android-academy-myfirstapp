@@ -45,6 +45,7 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
 
         setUpRecycler()
         movieListViewModel.moviesState.observe(viewLifecycleOwner, ::render)
+        movieListViewModel.progressState.observe(viewLifecycleOwner, ::showLoading)
         movieListViewModel.errorState.observe(viewLifecycleOwner, ::handleError)
 
         return binding.root
@@ -77,8 +78,6 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
     private fun render(state: MovieListState) {
         when (state) {
             MovieListState.EmptyMovies -> showEmptyStub()
-            MovieListState.LoadingStarted -> setLoading(true)
-            MovieListState.LoadingSuccess -> setLoading(false)
             is MovieListState.Success -> {
                 showMovies()
                 movieAdapter?.submitData(state.movies)
@@ -94,7 +93,7 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
         }
     }
 
-    private fun setLoading(inProgress: Boolean) {
+    private fun showLoading(inProgress: Boolean) {
         binding.progressBar.visibility = if (inProgress) {
             View.VISIBLE
         } else {

@@ -17,10 +17,7 @@ import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSo
 import ru.subbotind.android.academy.myfirstapp.data.network.MovieService
 import ru.subbotind.android.academy.myfirstapp.data.repository.MovieRepositoryImpl
 import ru.subbotind.android.academy.myfirstapp.domain.repository.MovieRepository
-import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMovieUseCase
-import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMovieUseCaseImpl
-import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMoviesUseCase
-import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMoviesUseCaseImpl
+import ru.subbotind.android.academy.myfirstapp.domain.usecase.*
 import javax.inject.Singleton
 
 @Module
@@ -58,4 +55,8 @@ interface MoviesModule {
     @Binds
     @Reusable
     fun bindGetMovieUseCase(getMovieUseCase: GetMovieUseCaseImpl): GetMovieUseCase
+
+    @Binds
+    @Reusable
+    fun bindFetchMoviesUseCase(fetchMoviesUseCase: FetchMoviesUseCaseImpl): FetchMoviesUseCase
 }
