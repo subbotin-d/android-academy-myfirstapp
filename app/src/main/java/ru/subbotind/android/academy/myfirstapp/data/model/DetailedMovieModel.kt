@@ -20,12 +20,8 @@ data class DetailedMovieModel(
     val adult: Boolean,
     @SerialName("genres")
     val genres: List<Genre>,
-    @SerialName("popularity")
-    val popularity: Float,
     @SerialName("runtime")
     val runtime: Int? = null,
-    @SerialName("tagline")
-    val tagline: String? = null,
     @SerialName("vote_average")
     val voteAverage: Float,
     @SerialName("vote_count")

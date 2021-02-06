@@ -2,19 +2,20 @@ package ru.subbotind.android.academy.myfirstapp
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+import ru.subbotind.android.academy.myfirstapp.data.converter.MovieConverter
 import ru.subbotind.android.academy.myfirstapp.data.datasource.GenreRemoteDataSource
+import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.model.DetailedMovieModel
 import ru.subbotind.android.academy.myfirstapp.data.model.MovieCreditsModel
 import ru.subbotind.android.academy.myfirstapp.data.model.MovieModel
 import ru.subbotind.android.academy.myfirstapp.data.repository.BaseImageUrlRepository
 import ru.subbotind.android.academy.myfirstapp.data.repository.MovieRepositoryImpl
+import ru.subbotind.android.academy.myfirstapp.data.repository.converter.MovieConverter
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Genre
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
@@ -29,13 +30,18 @@ class MovieRepositoryTest {
     private val movieRemoteDataSource: MovieRemoteDataSource =
         mock(MovieRemoteDataSource::class.java)
 
+    private val movieLocalDataSource: MovieLocalDataSource =
+        mock(MovieLocalDataSource::class.java)
+
     private val genresRemoteDataSource: GenreRemoteDataSource =
         mock(GenreRemoteDataSource::class.java)
 
     private val movieRepository = MovieRepositoryImpl(
         movieRemoteDataSource,
+        movieLocalDataSource,
         baseImageUrlRepository,
-        genresRemoteDataSource
+        genresRemoteDataSource,
+        MovieConverter()
     )
 
     private val baseUrl = "http://movie.org"
@@ -54,7 +60,6 @@ class MovieRepositoryTest {
             adult = true,
             backdropPath = "/hi",
             genreIDS = listOf(1, 2),
-            popularity = 2.50,
             posterPath = "/poster/hi",
             voteAverage = 7.55F,
             voteCount = 500
@@ -68,7 +73,6 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genreIDS = listOf(),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -81,7 +85,6 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genreIDS = listOf(1, 2, 5),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -94,7 +97,6 @@ class MovieRepositoryTest {
             adult = false,
             overview = "Avengers can do it",
             genreIDS = listOf(),
-            popularity = 2.50,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -106,7 +108,6 @@ class MovieRepositoryTest {
             title = "Avengers",
             adult = false,
             genres = listOf(),
-            popularity = 2.50F,
             voteAverage = 7.55F,
             voteCount = 500
         )
@@ -118,13 +119,11 @@ class MovieRepositoryTest {
             adult = true,
             overview = "Avengers can do it",
             genres = genreList,
-            popularity = 2.50F,
             voteAverage = 7.55F,
             voteCount = 500,
             backdropPath = "/backdrop/path",
             posterPath = "/poster/path",
             runtime = 100,
-            tagline = "Tag1, Tag2"
         )
 
     private val actors: List<Actor> = listOf(
@@ -143,13 +142,11 @@ class MovieRepositoryTest {
     )
 
     @Test
-    fun `WHEN list of movie model has poster and backdrop EXPECT correct url into movie object`() =
+    fun `WHEN list of movie model has poster and backdrop EXPECT refresh movies with correct url into movie object`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithMaximumInfo)
-
-            val actualMovieList = movieRepository.getMovies()
 
             val expectedMovieList = listOf(
                 Movie(
@@ -165,17 +162,17 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
-    fun `WHEN list of movie model has minimum info EXPECT success convertation into movie object`() =
+    fun `WHEN list of movie model has minimum info EXPECT save list into local data source`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithWithMinimumInfo)
-
-            val actualMovieList = movieRepository.getMovies()
 
             val expectedMovieList = listOf(
                 Movie(
@@ -189,7 +186,11 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(baseImageUrlRepository).getBaseUrl()
+            verify(genresRemoteDataSource).getGenres()
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test(expected = IllegalArgumentException::class)
@@ -198,17 +199,15 @@ class MovieRepositoryTest {
         `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
         `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithUnexpectedGenreId)
 
-        movieRepository.getMovies()
+        movieRepository.fetchMovies()
     }
 
     @Test
-    fun `WHEN list of movie model has not adult EXPECT movie with 13 pg rating`() =
+    fun `WHEN list of movie model has not adult EXPECT refresh movies into DB with 13 pg rating`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
-
-            val actualMovieList = movieRepository.getMovies()
 
             val expectedMovieList = listOf(
                 Movie(
@@ -222,17 +221,17 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
-    fun `WHEN movie model has not adult EXPECT movie with 13 pg rating`() =
+    fun `WHEN movie model has not adult EXPECT refresh movies into DB with 13 pg rating`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
-
-            val actualMovieList = movieRepository.getMovies()
 
             val expectedMovieList = listOf(
                 Movie(
@@ -246,19 +245,19 @@ class MovieRepositoryTest {
                 )
             )
 
-            assertEquals(expectedMovieList, actualMovieList)
+            movieRepository.fetchMovies()
+
+            verify(movieLocalDataSource).refreshMovies(expectedMovieList)
         }
 
     @Test
-    fun `WHEN actor has no picture EXPECT movie object with actor`() =
+    fun `WHEN actor has no picture EXPECT update movie object with actor into DB`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(movieRemoteDataSource.getMovie(1)).thenReturn(
                 detailedMovieModelWithMinimumInfo
             )
             `when`(movieRemoteDataSource.getMovieActors(1)).thenReturn(movieCreditsModelWithActors)
-
-            val actualMovie = movieRepository.getMovie(1)
 
             val expectedActorsList: List<Actor> = listOf(
                 Actor(1, "Johny Kish"),
@@ -275,11 +274,13 @@ class MovieRepositoryTest {
                 actors = expectedActorsList
             )
 
-            assertEquals(expectedMovie, actualMovie)
+            movieRepository.fetchMovie(1)
+
+            verify(movieLocalDataSource).updateMovie(expectedMovie)
         }
 
     @Test
-    fun `WHEN actor list is empty EXPECT movie without actors`() =
+    fun `WHEN actor list is empty EXPECT update movie without actors into DB`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(movieRemoteDataSource.getMovie(1)).thenReturn(
@@ -288,8 +289,6 @@ class MovieRepositoryTest {
             `when`(movieRemoteDataSource.getMovieActors(1)).thenReturn(
                 movieCreditsModelWithoutActors
             )
-
-            val actualMovie = movieRepository.getMovie(1)
 
             val expectedMovie = Movie(
                 id = 1,
@@ -301,11 +300,13 @@ class MovieRepositoryTest {
                 actors = emptyList()
             )
 
-            assertEquals(expectedMovie, actualMovie)
+            movieRepository.fetchMovie(1)
+
+            verify(movieLocalDataSource).updateMovie(expectedMovie)
         }
 
     @Test
-    fun `WHEN movie is adult and has images EXPECT movie with 16 pg rating and correct urls`() =
+    fun `WHEN movie is adult and has images EXPECT update movie with 16 pg rating and correct urls into DB`() =
         runBlockingTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(movieRemoteDataSource.getMovie(1)).thenReturn(
@@ -314,8 +315,6 @@ class MovieRepositoryTest {
             `when`(movieRemoteDataSource.getMovieActors(1)).thenReturn(
                 movieCreditsModelWithoutActors
             )
-
-            val actualMovie = movieRepository.getMovie(1)
 
             val expectedMovie = Movie(
                 id = 1,
@@ -331,6 +330,8 @@ class MovieRepositoryTest {
                 runtime = 100
             )
 
-            assertEquals(expectedMovie, actualMovie)
+            movieRepository.fetchMovie(1)
+
+            verify(movieLocalDataSource).updateMovie(expectedMovie)
         }
 }

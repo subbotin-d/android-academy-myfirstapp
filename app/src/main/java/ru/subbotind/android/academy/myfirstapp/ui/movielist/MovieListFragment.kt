@@ -16,7 +16,6 @@ import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListV
 import ru.subbotind.android.academy.myfirstapp.presentation.movielist.MovieListViewModel.MovieListState
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnCancelButtonClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnRetryButtonClickListener
-import ru.subbotind.android.academy.myfirstapp.ui.extensions.showInternetErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.showRetryErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MovieDetailsFragment
 import ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter.MovieAdapter
@@ -45,6 +44,7 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
 
         setUpRecycler()
         movieListViewModel.moviesState.observe(viewLifecycleOwner, ::render)
+        movieListViewModel.progressState.observe(viewLifecycleOwner, ::showLoading)
         movieListViewModel.errorState.observe(viewLifecycleOwner, ::handleError)
 
         return binding.root
@@ -77,8 +77,6 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
     private fun render(state: MovieListState) {
         when (state) {
             MovieListState.EmptyMovies -> showEmptyStub()
-            MovieListState.LoadingStarted -> setLoading(true)
-            MovieListState.LoadingSuccess -> setLoading(false)
             is MovieListState.Success -> {
                 showMovies()
                 movieAdapter?.submitData(state.movies)
@@ -88,13 +86,12 @@ class MovieListFragment : Fragment(), OnRetryButtonClickListener, OnCancelButton
 
     private fun handleError(errorState: ErrorState) {
         when (errorState) {
-            ErrorState.InternetError -> showInternetErrorDialog()
             is ErrorState.ServerError -> showRetryErrorDialog(errorState.cause)
             is ErrorState.UnexpectedError -> showRetryErrorDialog(errorState.cause)
         }
     }
 
-    private fun setLoading(inProgress: Boolean) {
+    private fun showLoading(inProgress: Boolean) {
         binding.progressBar.visibility = if (inProgress) {
             View.VISIBLE
         } else {

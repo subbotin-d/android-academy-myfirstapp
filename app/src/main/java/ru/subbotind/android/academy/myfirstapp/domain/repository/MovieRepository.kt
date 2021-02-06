@@ -1,10 +1,15 @@
 package ru.subbotind.android.academy.myfirstapp.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Movie
 
 interface MovieRepository {
 
-    suspend fun getMovies(): List<Movie>
+    fun getMovies(): Flow<List<Movie>>
 
-    suspend fun getMovie(movieId: Int): Movie
+    fun getMovie(movieId: Int): Flow<Movie>
+
+    suspend fun fetchMovies()
+
+    suspend fun fetchMovie(movieId: Int)
 }

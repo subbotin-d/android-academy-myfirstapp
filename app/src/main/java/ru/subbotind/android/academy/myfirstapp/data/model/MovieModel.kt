@@ -19,8 +19,6 @@ data class MovieModel(
     val posterPath: String? = null,
     @SerialName("genre_ids")
     val genreIDS: List<Int>,
-    @SerialName("popularity")
-    val popularity: Double,
     @SerialName("vote_average")
     val voteAverage: Float,
     @SerialName("vote_count")

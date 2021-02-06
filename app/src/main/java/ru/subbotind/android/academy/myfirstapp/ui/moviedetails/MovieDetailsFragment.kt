@@ -20,7 +20,6 @@ import ru.subbotind.android.academy.myfirstapp.presentation.moviedetails.MovieDe
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnCancelButtonClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.error.OnRetryButtonClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
-import ru.subbotind.android.academy.myfirstapp.ui.extensions.showInternetErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.showRetryErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.adapter.ActorAdapter
 
@@ -60,6 +59,7 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
         initListener()
 
         movieDetailsViewModel.movieState.observe(viewLifecycleOwner, ::renderMovie)
+        movieDetailsViewModel.progressState.observe(viewLifecycleOwner, ::showLoading)
         movieDetailsViewModel.errorState.observe(viewLifecycleOwner, ::handleError)
 
         return binding.root
@@ -81,30 +81,17 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
                 hideCastSection()
                 showMovieData(state.movie)
             }
-
-            MovieDetailsState.LoadingStarted -> startLoading()
-
-            MovieDetailsState.LoadingSuccess -> stopLoading()
         }
     }
 
     private fun handleError(state: ErrorState) {
         when (state) {
-            ErrorState.InternetError -> showInternetErrorDialog()
             is ErrorState.UnexpectedError -> showRetryErrorDialog(state.cause)
             is ErrorState.ServerError -> showRetryErrorDialog(state.cause)
         }
     }
 
-    private fun startLoading() {
-        setLoading(true)
-    }
-
-    private fun stopLoading() {
-        setLoading(false)
-    }
-
-    private fun setLoading(inProgress: Boolean) {
+    private fun showLoading(inProgress: Boolean) {
         binding.progressBar.visibility = if (inProgress) {
             View.VISIBLE
         } else {
