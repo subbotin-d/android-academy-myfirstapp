@@ -1,7 +1,7 @@
 package ru.subbotind.android.academy.myfirstapp.presentation.movielist
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.subbotind.android.academy.myfirstapp.data.network.exception.ServerErrorException
@@ -11,8 +11,10 @@ import ru.subbotind.android.academy.myfirstapp.domain.usecase.FetchMoviesUseCase
 import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMoviesUseCase
 import ru.subbotind.android.academy.myfirstapp.presentation.error.ErrorState
 import ru.subbotind.android.academy.myfirstapp.utils.SingleLiveEvent
+import javax.inject.Inject
 
-class MovieListViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MovieListViewModel @Inject constructor(
     private val getMoviesUseCase: GetMoviesUseCase,
     private val fetchMoviesUseCase: FetchMoviesUseCase
 ) : ViewModel() {

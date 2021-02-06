@@ -1,8 +1,7 @@
 package ru.subbotind.android.academy.myfirstapp.presentation.moviedetails
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.subbotind.android.academy.myfirstapp.data.network.exception.ServerErrorException
@@ -12,11 +11,13 @@ import ru.subbotind.android.academy.myfirstapp.domain.usecase.GetMovieUseCase
 import ru.subbotind.android.academy.myfirstapp.presentation.error.ErrorState
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.MOVIE_ID_KEY
 import ru.subbotind.android.academy.myfirstapp.utils.SingleLiveEvent
+import javax.inject.Inject
 
-class MovieDetailsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(
     private val getMovieUseCase: GetMovieUseCase,
     private val fetchMovieUseCase: FetchMovieUseCase,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var movieId: Int = savedStateHandle.get(MOVIE_ID_KEY) ?: throw IllegalArgumentException(
