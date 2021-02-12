@@ -16,6 +16,9 @@ interface MovieDao {
     @Query("SELECT * FROM movie_table ORDER BY last_update ASC")
     fun getMovies(): Flow<List<MovieEntity>>
 
+    @Query("SELECT * FROM movie_table")
+    suspend fun getAllMovies(): List<MovieEntity>
+
     @Query("SELECT * FROM movie_table WHERE id=:id")
     fun getMovie(id: Int): Flow<MovieEntity>
 }

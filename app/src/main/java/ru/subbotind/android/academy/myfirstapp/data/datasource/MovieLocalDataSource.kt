@@ -11,6 +11,8 @@ interface MovieLocalDataSource {
 
     fun getMovies(): Flow<List<Movie>>
 
+    suspend fun getAllMovies(): List<Movie>
+
     fun getMovie(movieId: Int): Flow<Movie>
 
     suspend fun refreshMovies(movies: List<Movie>)
@@ -28,6 +30,11 @@ class MovieLocalDataSourceImpl @Inject constructor(
             movieEntityList.map { movieEntity ->
                 movieEntityConverter.fromMovieEntity(movieEntity)
             }
+        }
+
+    override suspend fun getAllMovies(): List<Movie> =
+        movieDao.getAllMovies().map { movieEntity ->
+            movieEntityConverter.fromMovieEntity(movieEntity)
         }
 
     override fun getMovie(movieId: Int): Flow<Movie> =

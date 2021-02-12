@@ -1,6 +1,8 @@
 package ru.subbotind.android.academy.myfirstapp.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import ru.subbotind.android.academy.myfirstapp.data.datasource.GenreRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSource
@@ -24,11 +26,16 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieConverter: MovieConverter
 ) : MovieRepository {
 
+    private var newMoviesFlow: Flow<List<Movie>> = emptyFlow()
+
     override fun getMovies(): Flow<List<Movie>> = movieLocalDataSource.getMovies()
+
+    override fun getNewMovies(): Flow<List<Movie>> = newMoviesFlow
 
     override suspend fun fetchMovies() {
         try {
             val moviesFromNetwork = getMoviesFromNetwork()
+            calculateNewMovies(moviesFromNetwork)
             movieLocalDataSource.refreshMovies(moviesFromNetwork)
         } catch (e: SocketTimeoutException) {
             //do nothing
@@ -36,6 +43,20 @@ class MovieRepositoryImpl @Inject constructor(
             //do nothing
         } catch (e: UnknownHostException) {
             //do nothing
+        }
+    }
+
+    private suspend fun calculateNewMovies(movies: List<Movie>) {
+        val moviesFromDb: List<Movie> = movieLocalDataSource.getAllMovies()
+
+        val moviesFromDbIds: List<Int> = moviesFromDb.map { it.id }
+
+        val newMovies = movies.filter { movieFromNet ->
+            movieFromNet.id !in moviesFromDbIds
+        }
+
+        newMoviesFlow = flow {
+            emit(newMovies)
         }
     }
 

@@ -29,6 +29,8 @@ const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
 class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelButtonClickListener {
 
     companion object {
+        const val TAG = "MovieDetailsFragment"
+
         fun newInstance(movieId: Int) = MovieDetailsFragment().apply {
             arguments = bundleOf(MOVIE_ID_KEY to movieId)
         }

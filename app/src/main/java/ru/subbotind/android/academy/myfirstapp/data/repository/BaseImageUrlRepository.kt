@@ -1,5 +1,6 @@
 package ru.subbotind.android.academy.myfirstapp.data.repository
 
+import android.util.Log
 import ru.subbotind.android.academy.myfirstapp.data.datasource.BaseUrlLocalDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.BaseUrlRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.ConfigurationLastLoadingTimeDataSource
@@ -36,6 +37,7 @@ class BaseImageUrlRepositoryImpl @Inject constructor(
             configuration = localDataSource.get()
         }
 
+        Log.d("BASE_URL", configuration)
         return configuration
     }
 
