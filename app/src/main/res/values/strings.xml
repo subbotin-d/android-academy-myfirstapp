@@ -39,4 +39,13 @@
     <!-- Notification -->
     <string name="channel_name_text">Newest movies</string>
     <string name="channel_description_text">MovieApp newest movies updates</string>
+
+    <!-- Permissions -->
+    <string name="permission_not_granted_text">Calendar permission not granted</string>
+
+    <!-- Calendar -->
+    <string name="calendar_event_title">Watching Movie Session!</string>
+    <string name="calendar_event_location">Home!</string>
+    <string name="calendar_event_body">Movie time! I want to watch %s\nSee
+        details: %s</string>
 </resources>

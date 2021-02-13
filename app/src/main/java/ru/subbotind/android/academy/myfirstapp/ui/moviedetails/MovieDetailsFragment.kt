@@ -1,15 +1,28 @@
 package ru.subbotind.android.academy.myfirstapp.ui.moviedetails
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.CalendarContract
+import android.provider.CalendarContract.Events
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.clearFragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import ru.subbotind.android.academy.myfirstapp.DeepLinks
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesDetailsBinding
 import ru.subbotind.android.academy.myfirstapp.domain.entity.Actor
@@ -22,6 +35,8 @@ import ru.subbotind.android.academy.myfirstapp.ui.error.OnRetryButtonClickListen
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClickListener
 import ru.subbotind.android.academy.myfirstapp.ui.extensions.showRetryErrorDialog
 import ru.subbotind.android.academy.myfirstapp.ui.moviedetails.adapter.ActorAdapter
+import ru.subbotind.android.academy.myfirstapp.ui.picker.DatePickerFragment
+import java.util.*
 
 const val MOVIE_ID_KEY = "MOVIE_ID_KEY"
 
@@ -44,11 +59,40 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
     private val binding
         get() = _binding!!
 
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private var movie: Movie? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movieId = it.getInt(MOVIE_ID_KEY)
         }
+
+        setFragmentResultListener(DatePickerFragment.DATE_SET_KEY) { _, result ->
+            val year = result.getInt(DatePickerFragment.YEAR_KEY)
+            val month = result.getInt(DatePickerFragment.MONTH_KEY)
+            val day = result.getInt(DatePickerFragment.DAY_KEY)
+
+            val eventMillis: Long = Calendar.getInstance().run {
+                set(year, month, day)
+                timeInMillis
+            }
+
+            scheduleMovieWatchingEvent(eventMillis)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    onCalendarPermissionGranted()
+                } else {
+                    onCalendarPermissionNotGranted()
+                }
+            }
     }
 
     override fun onCreateView(
@@ -63,6 +107,10 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
         movieDetailsViewModel.movieState.observe(viewLifecycleOwner, ::renderMovie)
         movieDetailsViewModel.progressState.observe(viewLifecycleOwner, ::showLoading)
         movieDetailsViewModel.errorState.observe(viewLifecycleOwner, ::handleError)
+        movieDetailsViewModel.shouldStartSchedule.observe(
+            viewLifecycleOwner,
+            ::handleStartScheduleEvent
+        )
 
         return binding.root
     }
@@ -102,6 +150,8 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
     }
 
     private fun showMovieData(movie: Movie) {
+        this.movie = movie
+
         binding.apply {
             backButton.visibility = View.VISIBLE
 
@@ -157,8 +207,14 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
     }
 
     private fun initListener() {
-        binding.backButton.setOnDebouncedClickListener {
-            parentFragmentManager.popBackStack()
+        binding.apply {
+            backButton.setOnDebouncedClickListener {
+                parentFragmentManager.popBackStack()
+            }
+
+            scheduleButton.setOnDebouncedClickListener {
+                movieDetailsViewModel.onScheduleButtonClicked()
+            }
         }
     }
 
@@ -182,6 +238,70 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
 
     override fun onCancelButtonClick() {
         parentFragmentManager.popBackStack()
+    }
+
+    private fun handleStartScheduleEvent(needToSchedule: Boolean) {
+        activity?.let {
+            if (needToSchedule) {
+                val isPermissionGranted = ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+                if (isPermissionGranted) {
+                    onCalendarPermissionGranted()
+                } else {
+                    requestCalendarPermission()
+                }
+            }
+        }
+    }
+
+    private fun requestCalendarPermission() {
+        context?.let {
+            requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR)
+        }
+    }
+
+    private fun onCalendarPermissionGranted() {
+        DatePickerFragment().show(parentFragmentManager, DatePickerFragment.TAG)
+    }
+
+    private fun onCalendarPermissionNotGranted() {
+        context?.let {
+            Toast.makeText(context, R.string.permission_not_granted_text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun scheduleMovieWatchingEvent(eventMillis: Long) {
+        movie?.let { movie ->
+            val movieDeepLink = DeepLinks.getMovieDetailsDeepLink(movie.id)
+
+            val intent: Intent = Intent(Intent.ACTION_INSERT)
+                .setData(Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, eventMillis)
+                .putExtra(Events.TITLE, requireContext().getString(R.string.calendar_event_title))
+                .putExtra(
+                    Events.DESCRIPTION,
+                    requireContext().getString(
+                        R.string.calendar_event_body,
+                        movie.title,
+                        movieDeepLink
+                    )
+                )
+                .putExtra(
+                    Events.EVENT_LOCATION,
+                    requireContext().getString(R.string.calendar_event_location)
+                )
+                .putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY)
+            startActivity(intent)
+        }
+    }
+
+    override fun onDetach() {
+        requestPermissionLauncher.unregister()
+        clearFragmentResultListener(DatePickerFragment.DATE_SET_KEY)
+        super.onDetach()
     }
 
     override fun onDestroyView() {
