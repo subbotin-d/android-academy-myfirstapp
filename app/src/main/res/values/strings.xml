@@ -35,4 +35,8 @@
         later</string>
     <string name="not_found_error_text">Server can\'t find requested entity</string>
     <string name="unexpected_error_text">Unexpected error, please contact to @subbotin_d</string>
+
+    <!-- Notification -->
+    <string name="channel_name_text">Newest movies</string>
+    <string name="channel_description_text">MovieApp newest movies updates</string>
 </resources>
