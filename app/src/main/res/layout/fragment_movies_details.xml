@@ -49,6 +49,19 @@
             app:strokeWidth="0dp"
             tools:ignore="RtlHardcoded" />
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:background="@color/details_background_transparent"
+            android:id="@+id/schedule_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_huge"
+            app:layout_constraintBottom_toBottomOf="@id/back_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/back_button"
+            app:layout_constraintTop_toTopOf="@id/back_button"
+            app:srcCompat="@drawable/ic_calendar" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pg_rating"
             android:layout_width="wrap_content"
