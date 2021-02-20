@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.create
 import ru.subbotind.android.academy.myfirstapp.data.dao.MovieDao
@@ -21,7 +21,7 @@ import ru.subbotind.android.academy.myfirstapp.domain.usecase.*
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 interface MoviesModule {
 
     companion object {

@@ -5,8 +5,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -18,7 +18,7 @@ import ru.subbotind.android.academy.myfirstapp.data.network.interceptor.ServerEr
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
