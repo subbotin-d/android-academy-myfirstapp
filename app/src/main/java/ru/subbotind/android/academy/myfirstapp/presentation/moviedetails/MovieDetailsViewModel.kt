@@ -50,6 +50,9 @@ class MovieDetailsViewModel @Inject constructor(
     private val _errorState: SingleLiveEvent<ErrorState> = SingleLiveEvent()
     val errorState: LiveData<ErrorState> = _errorState
 
+    private val _shouldStartSchedule: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    val shouldStartSchedule: LiveData<Boolean> = _shouldStartSchedule
+
     init {
         loadMovie()
     }
@@ -60,6 +63,10 @@ class MovieDetailsViewModel @Inject constructor(
             fetchMovieUseCase.fetchMovie(movieId)
             _progressState.value = false
         }
+    }
+
+    fun onScheduleButtonClicked() {
+        _shouldStartSchedule.value = true
     }
 
     sealed class MovieDetailsState {

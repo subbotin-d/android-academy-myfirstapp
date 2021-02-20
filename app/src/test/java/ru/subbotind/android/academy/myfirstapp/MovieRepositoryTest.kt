@@ -1,12 +1,13 @@
 package ru.subbotind.android.academy.myfirstapp
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import ru.subbotind.android.academy.myfirstapp.data.converter.MovieConverter
 import ru.subbotind.android.academy.myfirstapp.data.datasource.GenreRemoteDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieLocalDataSource
 import ru.subbotind.android.academy.myfirstapp.data.datasource.MovieRemoteDataSource
@@ -102,6 +103,19 @@ class MovieRepositoryTest {
         )
     )
 
+    private val movieListWithNotAdultRating: List<Movie> = listOf(
+        Movie(
+            id = 1,
+            overview = "Avengers can do it",
+            title = "Avengers",
+            ratings = 7.55F,
+            numberOfRatings = 500,
+            minimumAge = 13,
+            genres = listOf()
+        )
+    )
+
+
     private val detailedMovieModelWithMinimumInfo: DetailedMovieModel =
         DetailedMovieModel(
             id = 1,
@@ -147,6 +161,7 @@ class MovieRepositoryTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithMaximumInfo)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(emptyList())
 
             val expectedMovieList = listOf(
                 Movie(
@@ -173,6 +188,7 @@ class MovieRepositoryTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithWithMinimumInfo)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(emptyList())
 
             val expectedMovieList = listOf(
                 Movie(
@@ -208,6 +224,7 @@ class MovieRepositoryTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(emptyList())
 
             val expectedMovieList = listOf(
                 Movie(
@@ -232,6 +249,7 @@ class MovieRepositoryTest {
             `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
             `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
             `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(emptyList())
 
             val expectedMovieList = listOf(
                 Movie(
@@ -333,5 +351,49 @@ class MovieRepositoryTest {
             movieRepository.fetchMovie(1)
 
             verify(movieLocalDataSource).updateMovie(expectedMovie)
+        }
+
+    @Test
+    fun `CHECK newMovie WHEN there is no movie in a db`() =
+        runBlockingTest {
+            `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
+            `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
+            `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(emptyList())
+
+            val expectedMovieList = listOf(
+                Movie(
+                    id = 1,
+                    overview = "Avengers can do it",
+                    title = "Avengers",
+                    ratings = 7.55F,
+                    numberOfRatings = 500,
+                    minimumAge = 13,
+                    genres = listOf()
+                )
+            )
+
+            movieRepository.fetchMovies()
+
+            val newMovieList = movieRepository.getNewMovies().first()
+
+            assertEquals("newMovieList is not equal to expected", newMovieList, expectedMovieList)
+        }
+
+    @Test
+    fun `CHECK no new movies WHEN there are movies from db equal movies from net`() =
+        runBlockingTest {
+            `when`(baseImageUrlRepository.getBaseUrl()).thenReturn(baseUrl)
+            `when`(genresRemoteDataSource.getGenres()).thenReturn(genreList)
+            `when`(movieRemoteDataSource.getMovies()).thenReturn(movieModelListWithNotAdultRating)
+            `when`(movieLocalDataSource.getAllMovies()).thenReturn(movieListWithNotAdultRating)
+
+            val expectedMovieList: List<Movie> = emptyList()
+
+            movieRepository.fetchMovies()
+
+            val newMovieList = movieRepository.getNewMovies().first()
+
+            assertEquals("newMovieList is not equal to expected", newMovieList, expectedMovieList)
         }
 }

@@ -7,6 +7,8 @@ interface MovieRepository {
 
     fun getMovies(): Flow<List<Movie>>
 
+    fun getNewMovies(): Flow<List<Movie>>
+
     fun getMovie(movieId: Int): Flow<Movie>
 
     suspend fun fetchMovies()

@@ -33,4 +33,8 @@ object AppModule {
             "movie_database"
         ).fallbackToDestructiveMigration()
             .build()
+
+    @ChannelIdQualifier
+    @Provides
+    fun provideChannelId(): String = "MovieAppChannel"
 }
