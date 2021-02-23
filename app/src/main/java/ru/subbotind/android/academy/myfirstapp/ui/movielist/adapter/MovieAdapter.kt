@@ -3,6 +3,7 @@ package ru.subbotind.android.academy.myfirstapp.ui.movielist.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -13,7 +14,7 @@ import ru.subbotind.android.academy.myfirstapp.ui.extensions.setOnDebouncedClick
 
 class MovieAdapter(
     private val likeListener: () -> Unit,
-    private val cardListener: (Int) -> Unit
+    private val cardListener: (Int, View) -> Unit
 ) : ListAdapter<DataItem, RecyclerView.ViewHolder>(MovieDiffUtilCallback()) {
 
     companion object {
@@ -23,7 +24,7 @@ class MovieAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            MOVIE_ITEM_ID -> MovieViewHolder.from(parent, cardListener)
+            MOVIE_ITEM_ID -> MovieViewHolder.from(parent, cardListener, likeListener)
             MOVIE_HEADER_ITEM_ID -> MovieHeaderViewHolder.from(parent)
             else -> throw NoSuchElementException("Adapter does not know this view type")
         }
@@ -31,11 +32,7 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is MovieViewHolder -> holder.bind(
-                (item as DataItem.MovieItem).movie,
-                likeListener,
-                cardListener
-            )
+            is MovieViewHolder -> holder.bind((item as DataItem.MovieItem).movie)
         }
     }
 
@@ -72,30 +69,41 @@ sealed class DataItem {
 
 class MovieViewHolder private constructor(
     private val binding: MovieItemBinding,
-    cardListener: (Int) -> Unit
+    cardListener: (Int, View) -> Unit,
+    likeListener: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
-        fun from(parent: ViewGroup, cardListener: (Int) -> Unit): MovieViewHolder {
+        fun from(
+            parent: ViewGroup,
+            cardListener: (Int, View) -> Unit,
+            likeListener: () -> Unit
+        ): MovieViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding =
                 MovieItemBinding.inflate(inflater, parent, false)
-            return MovieViewHolder(binding, cardListener)
+            return MovieViewHolder(binding, cardListener, likeListener)
         }
     }
 
     private var movieId: Int? = null
 
     init {
-        binding.moviePromoCard.setOnDebouncedClickListener {
+        binding.moviePromoCard.setOnDebouncedClickListener { promoCardView ->
             movieId?.let { id ->
-                cardListener(id)
+                cardListener(id, promoCardView)
             }
+        }
+
+        binding.likeImage.setOnDebouncedClickListener {
+            likeListener()
         }
     }
 
-    fun bind(movie: Movie, likeListener: () -> Unit, cardListener: (Int) -> Unit) {
+    fun bind(movie: Movie) {
         this.movieId = movie.id
+
+        ViewCompat.setTransitionName(binding.moviePromoCard, "MOVIE_WITH_ID_${movie.id}")
 
         binding.apply {
             Glide
@@ -107,10 +115,6 @@ class MovieViewHolder private constructor(
                 .into(movieMainImage)
 
             likeImage.setImageResource(R.drawable.ic_inactive_like)
-
-            likeImage.setOnDebouncedClickListener {
-                likeListener()
-            }
 
             pgRatingText.text = itemView.context.getString(
                 R.string.pg_rating,

@@ -1,14 +1,18 @@
 package ru.subbotind.android.academy.myfirstapp.ui.moviedetails
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ru.subbotind.android.academy.myfirstapp.R
 import ru.subbotind.android.academy.myfirstapp.databinding.FragmentMoviesDetailsBinding
@@ -32,6 +36,9 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
         fun newInstance(movieId: Int) = MovieDetailsFragment().apply {
             arguments = bundleOf(MOVIE_ID_KEY to movieId)
         }
+
+        const val ANIMATION_DURATION_MILLIS = 400L
+        const val MOVIE_SCREEN_TRANSITION_KEY = "MOVIE_DETAILS_TRANSITION_KEY"
     }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModels()
@@ -47,6 +54,18 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
         arguments?.let {
             movieId = it.getInt(MOVIE_ID_KEY)
         }
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            duration = ANIMATION_DURATION_MILLIS
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.details_background,
+                    requireContext().theme
+                )
+            )
+        }
     }
 
     override fun onCreateView(
@@ -54,6 +73,8 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMoviesDetailsBinding.inflate(inflater, container, false)
+        ViewCompat.setTransitionName(binding.movieDetailContainer, MOVIE_SCREEN_TRANSITION_KEY)
+        postponeEnterTransition()
 
         initRecycler()
         initListener()
@@ -105,6 +126,9 @@ class MovieDetailsFragment : Fragment(), OnRetryButtonClickListener, OnCancelBut
 
             Glide.with(requireContext())
                 .load(movie.backdrop)
+                .addListener(ImageLoadingStateListener {
+                    startPostponedEnterTransition()
+                })
                 .fitCenter()
                 .into(background)
 
